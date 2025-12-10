@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Comfortaa";
-  src: url("images/Comfortaa-Regular.ttf") format("truetype");
+  src: url("../images/Comfortaa-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -26,6 +26,14 @@ header {
     padding: 0;
     width: 100%;
 }
+footer {
+    height: 4rem;
+    text-align: end;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
 
 button {
     background-color: var(--accent-color);
@@ -41,7 +49,7 @@ button {
 }
 
 button:hover {
-    scale: 1.08;
+    scale: 1.05;
 }
 
 img {
@@ -61,7 +69,63 @@ img {
     width: 150px;
     height: 150px;
 }
+.play-btn:hover {
+    scale: 1.02;
+}
 
 .login-btn {
     margin-right: 20px;
+}
+
+.question-btn {
+    margin-right: 20px;
+}
+
+.main-menu {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+}
+.main-menu.active {
+    display: block;
+}
+
+.levels .container {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.levels {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+}
+.levels.active {
+    display: block;
+}
+
+.game {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+}
+.game.active {
+    display: block;
+}
+
+.rating, 
+.win,
+.lose,
+.pause,
+.help {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+}
+.rating.active,
+.win.active,
+.lose.active,
+.pause.active,
+.help.active {
+    display: block;
 }
