@@ -35,10 +35,10 @@ export default class ScreenManager {
         }
     }
     
-    hideModal(modalClass) {
-        const modal = document.querySelector(modalClass);
-        if (modal) {
-            modal.classList.remove('active');
+    hide(windowClass) {
+        const window = document.querySelector(windowClass);
+        if (window) {
+            window.classList.remove('active');
         }
     }
 }

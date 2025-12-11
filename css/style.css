@@ -16,6 +16,7 @@
 body {
     text-align: center;
     font-family: "Comfortaa", sans-serif;
+    cursor: url("../images/circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"), auto;
 }
 
 header {
@@ -128,4 +129,25 @@ img {
 .pause.active,
 .help.active {
     display: block;
+}
+
+button:hover {
+    cursor: url("../images/circle_38dp_E3E3E3_FILL0_wght400_GRAD0_opsz24\ 2.svg"), auto;
+}
+
+.modal {
+    background-color: var(--second-color);
+    color: #FFFFFF;
+    border-radius: 15px;
+}
+
+.help {
+    min-height: 300px;
+    min-width: 400px;
+    max-width: 600px;
+    max-height: 500px;
+}
+
+p {
+    font-size: 2rem;
 }
