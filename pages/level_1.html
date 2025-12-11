@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Уровень 1</title>
+    <link rel="stylesheet" href="../css/style.css"/>
+    <link rel="stylesheet" href="../css/game_style.css"/>
 </head>
 <body>
     <header>
-        <div class="stats">
+        <!-- <div class="stats">
             <p class="level-display">Уровень: 1</p>
             <p class="score-display">Очки: 0</p>
             <p class="timer-display">Время: 60s</p>
-        </div>
+        </div> -->
 
         <div class="header-menu">
             <button class="restart-btn">
                 <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
             </button>
-            <button class="home-btn">
+            <a class="home-btn" href="../index.html">
                 <img src="../images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
-            </button>   
+            </a>   
             <button class="pause-btn">
                 <img src="../images/pause_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
             </button>
@@ -28,51 +30,51 @@
     </header>
     <main>
         <div class="game">
-            <div class="speed">
+            <div class="speed-menu">
                 <p>Введите скорость</p>
                 <div class="speedometer">
-                    <input type="number" name="qwerty">
+                    <input class='speed' type="number" min="1" max="500">
                 </div>
             </div>
             <div class="task">
                 <div class="conditions">
-                    <p>Автомобиль едет 500 км</p>
+                    <p class="condition"></p>
                 </div>
                 <div class="question">
                     <p>Через сколько часов он доедет?</p>
-                    <input type="number" name="часов">     
+                    <input class='time' type="number" min="1">     
                 </div>
             </div>
-            <button class="check">
+            <button class="check-btn">
                 <img src="../images/check.svg">
             </button>
         </div>
 
-        <div class="win">
+        <div class="modal win">
             <div class="container">
                 <p id="result-title">Уровень пройден!</p>
                 <div class="results-stats">
                     <p>Очки: <span class="final-score">0</span></p>
                     <p>Время: <span class="final-time">0s</span></p>
                     <p>Уровень: <span class="completed-level">1</span></p>
-                    <p>Сложность: <span class="completed-complexity">1</span></p>
+                    <!-- <p>Сложность: <span class="completed-complexity">1</span></p> -->
                 </div>
                 
                 <div class="results-actions">
                     <button>
-                        <img src="images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                        <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </button>
-                    <button class="home-btn">
-                        <img src="images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
-                    </button>
+                    <a class="home-btn" href="../index.html">
+                        <img src="../images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                    </a> 
                     <button>
-                        <img src="images/Arrow right.svg">
+                        <img src="../images/Arrow right.svg">
                     </button>
                 </div>
             </div>
         </div>
 
-        <div class="lose">
+        <div class="modal lose">
             <div class="container">
                 <p id="result-title">Катастрофическая ошибка!</p>
                 <div class="results-stats">
@@ -84,20 +86,29 @@
                 
                 <div class="results-actions">
                     <button>
-                        <img src="images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                        <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </button>
-                    <button class="home-btn">
-                        <img src="images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
-                    </button>
+                    <a class="home-btn" href="../index.html">
+                        <img src="../images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                    </a> 
                 </div>
             </div>
         </div>
 
-        <div class="pause">
+        <div class="modal pause">
             <div class="container">
                 <p>Игра на паузе</p>
                 <button class="continue-btn">
-                    <img src="images/play_arrow_filled.svg">
+                    <img src="../images/play_arrow_filled.svg">
+                </button>
+            </div>
+        </div>
+
+        <div class="modal help">
+            <div class="container">
+                <p>Помощь</p>
+                <button class="close-btn">
+                    <img src="../images/X.svg">
                 </button>
             </div>
         </div>
@@ -107,6 +118,8 @@
             <img src="../images/question_mark_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
         </button>
     </footer>
-</div>
+    <!-- <script type="module" src="../js/main.js"></script> -->
+    <script type="module" src="../js/game_menu.js"></script>
+    <script type="module" src="../js/level_1.js"></script>
 </body>
 </html>

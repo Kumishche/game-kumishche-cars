@@ -1,0 +1,37 @@
+.play-btn {
+    width: 150px;
+    height: 150px;
+}
+.play-btn:hover {
+    scale: 1.02;
+}
+
+.login-btn {
+    margin-right: 20px;
+}
+
+.main-menu {
+    display: block;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.levels-grid {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.levels,
+.rating {
+    display: none;
+}
+
+.levels.active,
+.rating.active {
+    display: flex;
+}
+
+.title {
+    font-size: 2rem;
+}

@@ -1,0 +1,31 @@
+.stats {
+    color: #FFFFFF;
+}
+
+.win,
+.lose,
+.pause {
+    display: none;
+}
+.win.active,
+.lose.active,
+.pause.active {
+    display: flex;
+}
+
+.header-menu {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.game {
+    display: block;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.results-actions {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}

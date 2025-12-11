@@ -25,6 +25,7 @@ header {
     background-color: var(--second-color);
     margin: 0;
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
     padding: 0 20px;
     justify-content: end;
@@ -39,21 +40,7 @@ footer {
     width: 100%;
 }
 
-button {
-    background-color: var(--accent-color);
-    color: var(--text-color);
-    border-radius: 100%;
-    border-width: 0;
-    height: 50px;
-    width: 50px;
-    margin: 5px;
-    transition: 0.3s;
-}
-
-button:hover {
-    scale: 1.05;
-}
-
+button,
 a {
     background-color: var(--accent-color);
     color: var(--text-color);
@@ -63,10 +50,16 @@ a {
     width: 50px;
     margin: 5px;
     transition: 0.3s;
+    align-content: center;
+    font-size: 2.5rem;
+    text-decoration: none;
 }
 
+button:hover,
 a:hover {
     scale: 1.05;
+    cursor: url("../images/circle_38dp_E3E3E3_FILL0_wght400_GRAD0_opsz24\ 2.svg"), auto;
+
 }
 
 img {
@@ -82,73 +75,17 @@ img {
     margin-left: -8px;
 }
 
-.play-btn {
-    width: 150px;
-    height: 150px;
-}
-.play-btn:hover {
-    scale: 1.02;
-}
-
-.login-btn {
-    margin-right: 20px;
-}
-
 .question-btn {
     margin-right: 20px;
 }
 
-.main-menu {
-    display: none;
-    min-height: 100vh;
-    padding: 20px;
-}
-.main-menu.active {
-    display: block;
-}
-
-.levels-grid {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-}
-
-.stats {
-    color: #FFFFFF;
-}
-
-.levels,
-.game,
-.rating, 
-.win,
-.lose,
-.pause,
-.help, 
-.header-menu,
-.login-btn,
-.stats {
+.help {
     display: none;
 }
-
-.levels.active,
-.game.active,
-.rating.active,
-.win.active,
-.lose.active,
-.pause.active,
-.help.active,
-.header-menu.active,
-.stats.active {
+.help.active {
     display: flex;
 }
 
-.login-btn.active {
-    display: block;
-}
-
-button:hover {
-    cursor: url("../images/circle_38dp_E3E3E3_FILL0_wght400_GRAD0_opsz24\ 2.svg"), auto;
-}
 
 .modal {
     position: fixed;
@@ -157,9 +94,9 @@ button:hover {
     width: 100%;
     height: 100%;
     z-index: 10;
-    display: none;
     align-items: center;
     justify-content: center;
+    font-size: 1rem;
 }
 
 .container {
@@ -169,13 +106,4 @@ button:hover {
     z-index: 10;
     min-width: 300px;
     min-height: 400px;
-}
-
-p {
-    font-size: 2rem;
-}
-
-.modal p,
-.screen p {
-    font-size: 1rem;
 }
