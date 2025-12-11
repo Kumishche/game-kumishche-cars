@@ -8,12 +8,11 @@
 <body>
     <header>
         <div class="stats">
-            <span class="level-display">Уровень: 1</span>
-            <span class="score-display">Очки: 0</span>
-            <span class="timer-display">Время: 60s</span>
-            <span class="lives-display">❤️ ❤️ ❤️</span>
-            </div>
+            <p class="level-display">Уровень: 1</p>
+            <p class="score-display">Очки: 0</p>
+            <p class="timer-display">Время: 60s</p>
         </div>
+
         <div class="header-menu">
             <button class="restart-btn">
                 <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
@@ -25,26 +24,83 @@
                 <img src="../images/pause_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
             </button>
         </div>
+
     </header>
     <main>
-        <div class="speed">
-            <p>Введите скорость</p>
-            <div class="speedometer">
-                <input type="number" name="qwerty">
+        <div class="game">
+            <div class="speed">
+                <p>Введите скорость</p>
+                <div class="speedometer">
+                    <input type="number" name="qwerty">
+                </div>
+            </div>
+            <div class="task">
+                <div class="conditions">
+                    <p>Автомобиль едет 500 км</p>
+                </div>
+                <div class="question">
+                    <p>Через сколько часов он доедет?</p>
+                    <input type="number" name="часов">     
+                </div>
+            </div>
+            <button class="check">
+                <img src="../images/check.svg">
+            </button>
+        </div>
+
+        <div class="win">
+            <div class="container">
+                <p id="result-title">Уровень пройден!</p>
+                <div class="results-stats">
+                    <p>Очки: <span class="final-score">0</span></p>
+                    <p>Время: <span class="final-time">0s</span></p>
+                    <p>Уровень: <span class="completed-level">1</span></p>
+                    <p>Сложность: <span class="completed-complexity">1</span></p>
+                </div>
+                
+                <div class="results-actions">
+                    <button>
+                        <img src="images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                    </button>
+                    <button class="home-btn">
+                        <img src="images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                    </button>
+                    <button>
+                        <img src="images/Arrow right.svg">
+                    </button>
+                </div>
             </div>
         </div>
-        <div class="task">
-            <div class="conditions">
-                <p>Автомобиль едет 500 км</p>
-            </div>
-            <div class="question">
-                <p>Через сколько часов он доедет?</p>
-                <input type="number" name="часов">     
+
+        <div class="lose">
+            <div class="container">
+                <p id="result-title">Катастрофическая ошибка!</p>
+                <div class="results-stats">
+                    <p>Очки: <span class="final-score">0</span></p>
+                    <p>Время: <span class="final-time">0s</span></p>
+                    <p>Уровень: <span class="completed-level">1</span></p>
+                    <p>Сложность: <span class="completed-complexity">1</span></p>
+                </div>
+                
+                <div class="results-actions">
+                    <button>
+                        <img src="images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                    </button>
+                    <button class="home-btn">
+                        <img src="images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                    </button>
+                </div>
             </div>
         </div>
-        <button class="check">
-            <img src="../images/check.svg">
-        </button>
+
+        <div class="pause">
+            <div class="container">
+                <p>Игра на паузе</p>
+                <button class="continue-btn">
+                    <img src="images/play_arrow_filled.svg">
+                </button>
+            </div>
+        </div>
     </main>
     <footer>
         <button class="question-btn">
