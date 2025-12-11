@@ -11,23 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     hide_all_modals();
 });
 
-
-
-pause_btn.addEventListener('click', () => {
-    show_modal('pause');
-    // timer stops
-});
-
-continue_btn.addEventListener('click', () => {
-    hide_modal('pause');
-    // timer starts
-});
-
-restart_btn.addEventListener('click', () => {
-    // reset stats
-    
-});
-
 question_btn.addEventListener('click', () => {
     show_modal('help');
 });
