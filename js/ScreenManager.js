@@ -21,6 +21,9 @@ export default class ScreenManager {
     
     showScreen(screenClass) {
         this.hideAllScreens();
+        this.screens.forEach(screen => {
+            screen.classList.remove('active');
+        });
         const screen = document.querySelector(screenClass);
         if (screen) {
             screen.classList.add('active');
@@ -40,5 +43,6 @@ export default class ScreenManager {
         if (window) {
             window.classList.remove('active');
         }
+        this.showScreen(this.currentScreen);
     }
 }

@@ -17,24 +17,27 @@ body {
     text-align: center;
     font-family: "Comfortaa", sans-serif;
     cursor: url("../images/circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"), auto;
+    min-height: auto;
 }
-
+ 
 header {
     height: 4rem;
     background-color: var(--second-color);
-    text-align: end;
     margin: 0;
-    padding: 0;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    justify-content: end;
 }
+
 footer {
     height: 4rem;
     text-align: end;
     margin: 0;
-    padding: 0;
+    position: absolute;
+    bottom: 0;
     width: 100%;
 }
-
 
 button {
     background-color: var(--accent-color);
@@ -43,13 +46,26 @@ button {
     border-width: 0;
     height: 50px;
     width: 50px;
-    position: relative;
-    left: 10px;
-    top: 10%;
+    margin: 5px;
     transition: 0.3s;
 }
 
 button:hover {
+    scale: 1.05;
+}
+
+a {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-radius: 100%;
+    border-width: 0;
+    height: 50px;
+    width: 50px;
+    margin: 5px;
+    transition: 0.3s;
+}
+
+a:hover {
     scale: 1.05;
 }
 
@@ -91,43 +107,42 @@ img {
     display: block;
 }
 
-.levels .container {
+.levels-grid {
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: row wrap;
+    justify-content: center;
 }
 
-.levels {
-    display: none;
-    min-height: 100vh;
-    padding: 20px;
-}
-.levels.active {
-    display: block;
+.stats {
+    color: #FFFFFF;
 }
 
-.game {
-    display: none;
-    min-height: 100vh;
-    padding: 20px;
-}
-.game.active {
-    display: block;
-}
-
+.levels,
+.game,
 .rating, 
 .win,
 .lose,
 .pause,
-.help {
+.help, 
+.header-menu,
+.login-btn,
+.stats {
     display: none;
-    min-height: 100vh;
-    padding: 20px;
 }
+
+.levels.active,
+.game.active,
 .rating.active,
 .win.active,
 .lose.active,
 .pause.active,
-.help.active {
+.help.active,
+.header-menu.active,
+.stats.active {
+    display: flex;
+}
+
+.login-btn.active {
     display: block;
 }
 
@@ -136,18 +151,31 @@ button:hover {
 }
 
 .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
     background-color: var(--second-color);
     color: #FFFFFF;
     border-radius: 15px;
-}
-
-.help {
-    min-height: 300px;
-    min-width: 400px;
-    max-width: 600px;
-    max-height: 500px;
+    z-index: 10;
+    min-width: 300px;
+    min-height: 400px;
 }
 
 p {
     font-size: 2rem;
+}
+
+.modal p,
+.screen p {
+    font-size: 1rem;
 }
