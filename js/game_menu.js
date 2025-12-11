@@ -25,7 +25,7 @@ continue_btn.addEventListener('click', () => {
 
 restart_btn.addEventListener('click', () => {
     // reset stats
-    hide_all_modals();
+    
 });
 
 question_btn.addEventListener('click', () => {

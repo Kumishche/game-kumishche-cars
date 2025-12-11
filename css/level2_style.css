@@ -1,0 +1,26 @@
+:root {
+    --background-color: #FFFFFF;
+    --second-color: #181E00;
+    --accent-color: #C8E642;
+    --text-color: #000000;
+}
+
+.car {
+    min-width: 200px;
+    min-height: 200px;
+}
+
+.distance {
+    min-width: 200px;
+    min-height: 3rem;
+    background-color: #d7d7d7;
+    border: 3px solid var(--accent-color);
+    border-radius: 10px;
+}
+
+.field {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    padding: 10px;
+}
