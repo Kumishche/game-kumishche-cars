@@ -21,6 +21,7 @@ let interval = setInterval(() => {
     time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
     if (current_time <= 0) {
         clearInterval(interval);
+        time_text.textContent = ""
         show_modal('lose');
     }
 }, 150);

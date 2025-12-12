@@ -11,20 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
     hide_all_modals();
 });
 
+pause_btn.addEventListener('click', () => {
+    show_modal('pause');
+});
+
 question_btn.addEventListener('click', () => {
     show_modal('help');
+});
+
+continue_btn.addEventListener('click', () => {
+    hide_modal('pause');
 });
 
 close_btns.forEach(button => {
     button.addEventListener('click', () => {
         hide_modal(button.closest('.modal').classList[1]);
     });
-});
-
-pause_btn.addEventListener('click', () => {
-    show_modal('pause');
-});
-
-continue_btn.addEventListener('click', () => {
-    hide_modal('pause');
 });
