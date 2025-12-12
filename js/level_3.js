@@ -7,27 +7,63 @@ const help_btn = document.querySelector('.question-btn');
 const close_btn = document.querySelector('.close-btn');
 const final_score = document.querySelector('.final-score');
 const final_time = document.querySelector('.final-time');
+const complexity = document.querySelectorAll('.complexity-btn');
 
-const time = 120*1000;
+let time = 0;
+let current_time;
+let num_obstacles = 5;
 const time_text = document.querySelector('.time');
-let current_time = time;
 let score = 0;
+let score_koef = 1;
 time_text.textContent = current_time;
 
 let crashed = false;
+let interval;
 
-let interval = setInterval(() => {
-    current_time -= 150;
-    const min = Math.floor(current_time / 60000);
-    const sec = Math.floor(current_time % 60000 / 1000);
-    const ms = Math.floor(current_time % 1000);
-    time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
-    if (current_time <= 0) {
-        clearInterval(interval);
-        time_text.textContent = "о нет..";
-        show_modal('lose');
-    }
-}, 150);
+document.addEventListener('DOMContentLoaded', () => {
+    show_modal('complexity');
+});
+
+complexity.forEach(button => {
+    button.addEventListener('click', () => {
+        hide_modal('complexity');
+
+        switch (button.classList[1])
+        {
+            case 'easy':
+                time = 5;
+                num_obstacles = 4;
+                score_koef = 1;
+                break;
+            case 'medium':
+                time = 8;
+                num_obstacles = 5;
+                score_koef = 1.15;
+                break;
+            case 'hard':
+                time = 6;
+                num_obstacles = 6;
+                score_koef = 2;
+                break;
+        }
+    
+        create_obstacles(num_obstacles);
+        time *= 1000;
+        current_time = time;
+        interval = setInterval(() => {
+            current_time -= 150;
+            const min = Math.floor(current_time / 60000);
+            const sec = Math.floor(current_time % 60000 / 1000);
+            const ms = Math.floor(current_time % 1000);
+            time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
+            if (current_time <= 0) {
+                clearInterval(interval);
+                time_text.textContent = "о нет..";
+                show_modal('lose');
+            }
+        }, 150);
+    });
+});
 
 let crashCheckInterval;
 
@@ -92,7 +128,7 @@ document.addEventListener("dragover", e => {
 
     if (x >= finish.getBoundingClientRect().left && !isTopOut && !isBottomOut) {
         clearInterval(interval);
-        score = Math.round(Math.pow((time - current_time)/1000/10, 2));
+        score = Math.round(score_koef * 100 * (1/((time - current_time)/1000)));
         show_modal('win');
         final_score.textContent = score;
         const min = Math.floor((time - current_time) / 60000);
@@ -101,28 +137,6 @@ document.addEventListener("dragover", e => {
         final_time.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
     }
 });
-
-
-
-// road.addEventListener("drop", (e) => {
-//     e.preventDefault();
-
-//     if (!e.dataTransfer.getData('type') || e.dataTransfer.getData('type') != 'car') return;
-
-//     const rect = road.getBoundingClientRect();
-//     const x = e.clientX - rect.left - car.offsetWidth / 2;
-//     const y = rect.bottom - e.clientY - car.offsetHeight / 2;
-
-//     car.style.left = x + "px";
-//     car.style.bottom = y + "px";
-
-//     if (car.getBoundingClientRect().left >= finish.getBoundingClientRect().left) {
-//         clearInterval(interval);
-//         show_modal('win');
-//     }
-
-//     car.classList.remove('active');
-// });
 
 pause_btn.addEventListener('click', () => {
     show_modal('pause');
@@ -164,67 +178,68 @@ close_btn.addEventListener('click', () => {
     }, 150);
 });
 
+function create_obstacles(num_obstacles) {
+    const obstacles = [];
+    const patterns = [
+        [true, false, false],
+        [false, true, false],
+        [false, false, true],
+        [true, true, false],
+        [false, true, true],
+        [true, false, true]
+    ]
 
-const obstacles = [];
-const patterns = [
-    [true, false, false],
-    [false, true, false],
-    [false, false, true],
-    [true, true, false],
-    [false, true, true],
-    [true, false, true]
-]
+    for (let i = 0; i < num_obstacles; i++) {
+        let pattern;
+        let attempts = 0;
+        let k = 1;
 
-for (let i = 0; i < 6; i++) {
-    let pattern;
-    let attempts = 0;
-    let k = 1;
+        do {
+            pattern = patterns[Math.floor(Math.random() * patterns.length)];
+            attempts++;
+            
+            if (i === 0) break;
+            
+            const prevRow = obstacles[i - 1];
 
-    do {
-        pattern = patterns[Math.floor(Math.random() * patterns.length)];
-        attempts++;
+            let sameAsPrev = true;
+            for (let j = 0; j < pattern.length; j++) {
+                if (prevRow[i] !== pattern[i]) sameAsPrev = false;
+            }
+            
+            if (sameAsPrev) {
+                k += 1;
+            }
+
+            if (k < 3) {
+                break;
+            }    
+        } while (attempts < 100);
         
-        if (i === 0) break;
-        
-        const prevRow = obstacles[i - 1];
-
-        let sameAsPrev = true;
-        for (let j = 0; j < pattern.length; j++) {
-            if (prevRow[i] !== pattern[i]) sameAsPrev = false;
-        }
-        
-        if (sameAsPrev) {
-            k += 1;
-        }
-
-        if (k < 3) {
-            break;
-        }    
-    } while (attempts < 100);
-    
-    obstacles.push([...pattern]);
-}
-
-
-for (let i = 0; i < obstacles.length; i++) {
-    const obstacle = document.createElement('div');
-    obstacle.className = "obstacle";
-    obstacle.style.position = 'absolute';
-    for (let j = 0; j < obstacles[i].length; j++) {
-        if (obstacles[i][j]) {
-            const new_obstacle = document.createElement("img");
-            new_obstacle.src = '../images/car_object.svg';
-            new_obstacle.className = 'obstacle-car';
-            new_obstacle.style.position = 'absolute';
-            new_obstacle.style.width = '70px';
-            new_obstacle.style.height = '70px';
-            new_obstacle.style.top = j*(rect.height/3) + 'px';
-            obstacle.appendChild(new_obstacle);
-        }
+        obstacles.push([...pattern]);
     }
 
-    obstacle.style.width = '70px';
-    obstacle.style.height = '100%';
-    obstacle.style.left = 100 + i*(((rect.width-120)/obstacles.length)) + 'px' ;   
-    road.appendChild(obstacle);
+
+    for (let i = 0; i < obstacles.length; i++) {
+        const obstacle = document.createElement('div');
+        obstacle.className = "obstacle";
+        obstacle.style.position = 'absolute';
+        for (let j = 0; j < obstacles[i].length; j++) {
+            if (obstacles[i][j]) {
+                const new_obstacle = document.createElement("img");
+                new_obstacle.src = '../images/car_object.svg';
+                new_obstacle.className = 'obstacle-car';
+                new_obstacle.style.position = 'absolute';
+                new_obstacle.style.width = '70px';
+                new_obstacle.style.height = '70px';
+                new_obstacle.style.top = j*(rect.height/3) + 'px';
+                obstacle.appendChild(new_obstacle);
+            }
+        }
+
+        obstacle.style.width = '70px';
+        obstacle.style.height = '100%';
+        obstacle.style.left = 100 + i*(((rect.width-120)/obstacles.length)) + 'px' ;   
+        road.appendChild(obstacle);
+    };
 };
