@@ -20,3 +20,11 @@ close_btns.forEach(button => {
         hide_modal(button.closest('.modal').classList[1]);
     });
 });
+
+pause_btn.addEventListener('click', () => {
+    show_modal('pause');
+});
+
+continue_btn.addEventListener('click', () => {
+    hide_modal('pause');
+});
