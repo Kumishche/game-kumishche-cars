@@ -3,33 +3,78 @@ import {show_modal, hide_modal} from "./functions.js";
 const speedOutput = document.querySelector('.speed');
 const pause_btn = document.querySelector('.pause-btn');
 const continue_btn = document.querySelector('.continue-btn');
-const close_btn = document.querySelectorAll('.close-btn');
+const close_btn = document.querySelector('.close-btn');
 const help_btn = document.querySelector('.question-btn');
-const distance = Math.round(Math.random()*1500);
-const time = Math.round(Math.random()*150);
+
 const task_1 = document.querySelector('.condition1');
 const task_2 = document.querySelector('.condition2');
 const final_score = document.querySelector('.final-score');
 const final_time = document.querySelector('.final-time');
-
-task_1.textContent = "Автомобиль проехал " + distance + "км";
-task_2.textContent = "Время в дороге составило " + time + "ч";
+const complexity = document.querySelectorAll('.complexity-btn');
 
 let score;
 let current_time = 0;
-let interval = setInterval(() => {
-        current_time += 100;
-    }, 100);
+let interval;
+
+let speed_koef;
+let time_koef;
+let score_koef;
+
+let distance;
+let time;
+
+document.addEventListener('DOMContentLoaded', () => {
+    show_modal('complexity');
+});
+
+complexity.forEach(button => {
+    button.addEventListener('click', () => {
+        hide_modal('complexity');
+
+        switch (button.classList[1])
+        {
+            case 'easy':
+                speed_koef = 2;
+                time_koef = 1;
+                score_koef = 1;
+                break;
+            case 'medium':
+                speed_koef = 2;
+                time_koef = 2;
+                score_koef = 1.1;
+                break;
+            case 'hard':
+                speed_koef = 3;
+                time_koef = 2;
+                score_koef = 1.2;
+                break;
+        }
+
+        distance = 400 + Math.round(Math.random().toFixed(speed_koef)*10000);
+        time = 10 + Math.round(Math.random().toFixed(time_koef)*100);
+
+        task_1.textContent = "Автомобиль проехал " + distance + "км";
+        task_2.textContent = "Время в дороге составило " + time + "ч";
+
+        interval = setInterval(() => {
+            current_time += 100;
+        }, 100);
+    })
+})
+
 
 const check_btn = document.querySelector('.check-btn');
 check_btn.addEventListener('click', () => {
     const speed = Number(speedOutput.textContent);
     const eps = Math.abs(speed*time - distance);
     clearInterval(interval);
-    console.log(current_time);
-    console.log(eps);
     if (eps <= 100) {
-        score = Math.round(100/(current_time/1000) + 100/Math.pow(eps, 2));
+        if (eps == 0) {
+            score = score_koef * Math.round(100/(current_time/1000) + + 100/Math.pow(0.1, 2));
+        }
+        else {
+            score = score_koef * Math.round(100/(current_time/1000) + 100/Math.pow(eps, 2));
+        }
         show_modal('win');
         final_score.textContent = score;
         const min = Math.floor(current_time / 60000);

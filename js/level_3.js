@@ -5,10 +5,13 @@ const pause_btn = document.querySelector('.pause-btn');
 const continue_btn = document.querySelector('.continue-btn');
 const help_btn = document.querySelector('.question-btn');
 const close_btn = document.querySelector('.close-btn');
+const final_score = document.querySelector('.final-score');
+const final_time = document.querySelector('.final-time');
 
 const time = 120*1000;
 const time_text = document.querySelector('.time');
 let current_time = time;
+let score = 0;
 time_text.textContent = current_time;
 
 let crashed = false;
@@ -21,7 +24,7 @@ let interval = setInterval(() => {
     time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
     if (current_time <= 0) {
         clearInterval(interval);
-        time_text.textContent = ""
+        time_text.textContent = "о нет..";
         show_modal('lose');
     }
 }, 150);
@@ -80,39 +83,46 @@ document.addEventListener("dragover", e => {
     if (isOut || crashed) {
         current_time = 0;
         road.classList.add('active');
+        return;
     }
     else
     {
         road.classList.remove('active');
     }
 
-    if (x - (car.offsetWidth / 2) >= finish.getBoundingClientRect().left && !isTopOut && !isBottomOut) {
+    if (x >= finish.getBoundingClientRect().left && !isTopOut && !isBottomOut) {
         clearInterval(interval);
+        score = Math.round(Math.pow((time - current_time)/1000/10, 2));
         show_modal('win');
+        final_score.textContent = score;
+        const min = Math.floor((time - current_time) / 60000);
+        const sec = Math.floor((time - current_time) % 60000 / 1000);
+        const ms = Math.floor((time - current_time) % 1000);
+        final_time.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
     }
 });
 
 
 
-road.addEventListener("drop", (e) => {
-    e.preventDefault();
+// road.addEventListener("drop", (e) => {
+//     e.preventDefault();
 
-    if (!e.dataTransfer.getData('type') || e.dataTransfer.getData('type') != 'car') return;
+//     if (!e.dataTransfer.getData('type') || e.dataTransfer.getData('type') != 'car') return;
 
-    const rect = road.getBoundingClientRect();
-    const x = e.clientX - rect.left - car.offsetWidth / 2;
-    const y = rect.bottom - e.clientY - car.offsetHeight / 2;
+//     const rect = road.getBoundingClientRect();
+//     const x = e.clientX - rect.left - car.offsetWidth / 2;
+//     const y = rect.bottom - e.clientY - car.offsetHeight / 2;
 
-    car.style.left = x + "px";
-    car.style.bottom = y + "px";
+//     car.style.left = x + "px";
+//     car.style.bottom = y + "px";
 
-    if (car.getBoundingClientRect().left >= finish.getBoundingClientRect().left) {
-        clearInterval(interval);
-        show_modal('win');
-    }
+//     if (car.getBoundingClientRect().left >= finish.getBoundingClientRect().left) {
+//         clearInterval(interval);
+//         show_modal('win');
+//     }
 
-    car.classList.remove('active');
-});
+//     car.classList.remove('active');
+// });
 
 pause_btn.addEventListener('click', () => {
     show_modal('pause');
