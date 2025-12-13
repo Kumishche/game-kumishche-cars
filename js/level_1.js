@@ -12,6 +12,7 @@ const task_2 = document.querySelector('.condition2');
 const final_score = document.querySelector('.final-score');
 const final_time = document.querySelector('.final-time');
 const complexity = document.querySelectorAll('.complexity-btn');
+const username = document.querySelector('.username');
 
 let score;
 let current_time = 0;
@@ -26,6 +27,10 @@ let time;
 
 document.addEventListener('DOMContentLoaded', () => {
     show_modal('complexity');
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+        username.textContent = currentUser;
+    };
 });
 
 complexity.forEach(button => {
@@ -52,7 +57,9 @@ complexity.forEach(button => {
         }
 
         distance = 400 + Math.round(Math.random().toFixed(speed_koef)*10000);
-        time = 10 + Math.round(Math.random().toFixed(time_koef)*100);
+        do {
+            time = 10 + Math.round(Math.random().toFixed(time_koef)*100);
+        } while (distance / time > 500);
 
         task_1.textContent = "Автомобиль проехал " + distance + "км";
         task_2.textContent = "Время в дороге составило " + time + "ч";
@@ -70,12 +77,7 @@ check_btn.addEventListener('click', () => {
     const eps = Math.abs(speed*time - distance);
     clearInterval(interval);
     if (eps <= 300) {
-        if (eps == 0) {
-            score = score_koef * Math.round(100/(current_time/1000) + + 100/Math.pow(0.1, 2));
-        }
-        else {
-            score = score_koef * Math.round(100/(current_time/1000) + 100/Math.pow(eps, 2));
-        }
+        score = Math.round(score_koef * Math.round(100/((current_time/1000)+0.001) + 100/(Math.pow(eps, 2)+0.001)));
         show_modal('win');
         final_score.textContent = score;
         const min = Math.floor(current_time / 60000);
@@ -99,8 +101,8 @@ check_btn.addEventListener('click', () => {
 });
 
 const arrow = document.querySelector('.arrow');
-const minAngle = -120; 
-const maxAngle = 120;  
+const minAngle = -140; 
+const maxAngle = 140;  
 
 arrow.setAttribute('draggable', 'true');
 arrow.addEventListener('dragstart', (e) => {
@@ -121,13 +123,14 @@ speedometer.addEventListener('dragover', (e) => {
     const deltaX = e.clientX - pivotX;
     const deltaY = pivotY - e.clientY; 
     
-    let angle = Math.atan2(deltaX, deltaY) * (240 / Math.PI);
+    const range = (Math.abs(minAngle) + Math.abs(maxAngle));
+    let angle = Math.atan2(deltaX, deltaY) * (range / Math.PI);
     if (angle < minAngle) angle = minAngle;
     if (angle > maxAngle) angle = maxAngle;
     
     arrow.style.transform = `rotate(${angle}deg)`;
 
-    const speed = Math.round(((angle - minAngle) / 240).toFixed(3) * 500);
+    const speed = Math.round(((angle - minAngle) / range).toFixed(3) * 500);
     speedOutput.textContent = Math.min(500, Math.max(0, speed));
 });
 

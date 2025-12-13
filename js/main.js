@@ -7,6 +7,10 @@ const close_btns = document.querySelectorAll('.close-btn');
 const signin_btn = document.querySelector('.signin-btn');
 const signup_btn = document.querySelector('.signup-btn');
 const logout_btn = document.querySelector('.logout-btn');
+const rating_btns = document.querySelectorAll('.rating-btn');
+const rating_table = document.querySelector('.rating-table');
+const username = document.querySelector('.username');
+const level_btns = document.querySelectorAll('.level-btn');
 
 let scores;
 
@@ -15,10 +19,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const currentUser = localStorage.getItem("currentUser");
     if (currentUser) {
-        console.log(`Текущий пользователь: ${currentUser}`);
+        username.textContent = currentUser;
+        scores = func.getScores(currentUser);
+        console.log(scores);
     } else {
         func.show_modal('login');
     };
+
+    level_btns.forEach(button => {
+        const level = button.dataset.level;
+        if (level > 1 && scores[level-2] == 0) {
+            const img = new Image();
+            img.src = "./images/Lock.svg";
+            button.innerHTML = "";
+            button.appendChild(img);   
+            button.addEventListener('click', (e) => e.preventDefault());
+        }
+    })
 });
 
 play_btn.addEventListener("click", () => {
@@ -31,6 +48,8 @@ question_btn.addEventListener('click', () => {
 
 chart_btn.addEventListener('click', () => {
     func.show_modal('rating');
+    rating_click(1);
+    rating_btns[0].classList.add('active');
 });
 
 close_btns.forEach(button => {
@@ -40,6 +59,14 @@ close_btns.forEach(button => {
 });
 
 signin_btn.addEventListener('click', () => {
+    signin();
+});
+
+document.addEventListener('keydown', e => {
+    if (e.key == 'Enter')  signin();
+});
+
+function signin() {
     const input_login = document.querySelector('.login-input');
     const login = input_login.value.trim();
     
@@ -53,14 +80,25 @@ signin_btn.addEventListener('click', () => {
     
     if (existingUser) {
         localStorage.setItem("currentUser", login);
-        alert(`Добро пожаловать, ${login}!`);
         func.hide_modal('login');
         scores = func.getScores(login);
         console.log(scores);
+        username.textContent = login;
     } else {
         alert(`Пользователь с таким логином отсутствует`);
     };
-});
+
+    level_btns.forEach(button => {
+        const level = button.dataset.level;
+        if (level > 1 && scores[level-2] == 0) {
+            const img = new Image();
+            img.src = "./images/Lock.svg";
+            button.innerHTML = "";
+            button.appendChild(img);   
+            button.addEventListener('click', (e) => e.preventDefault());
+        }
+    });
+};
 
 signup_btn.addEventListener('click', () => {
     const input_login = document.querySelector('.login-input');
@@ -80,10 +118,22 @@ signup_btn.addEventListener('click', () => {
             scores = [0, 0, 0];
             console.log(scores);
             func.hide_modal('login');
+            username.textContent = login;
         } else {
             alert('Ошибка при регистрации');
         };
     };
+
+    level_btns.forEach(button => {
+        const level = button.dataset.level;
+        if (level > 1 && scores[level-2] == 0) {
+            const img = new Image();
+            img.src = "./images/Lock.svg";
+            button.innerHTML = "";
+            button.appendChild(img);   
+            button.addEventListener('click', (e) => e.preventDefault());
+        }
+    })
 });
 
 
@@ -95,4 +145,42 @@ logout_btn.addEventListener('click', () => {
     }
     localStorage.setItem('currentUser', "");
     func.show_modal('login');
+    username.textContent = "";
 });
+
+
+rating_btns.forEach(button => {
+    button.addEventListener('click', () => {
+        rating_click(button.dataset.level);
+        rating_btns.forEach(button => button.classList.remove('active'));
+        button.classList.add('active');
+    });
+});
+
+function rating_click(level) {
+    const users = func.getAllUsers();
+    level--;
+    const sortedUsers = users.sort((userA, userB) => {
+        const scoreA = userA.levelScores[level];
+        const scoreB = userB.levelScores[level];
+        return scoreB - scoreA;
+    });
+
+    displayRating(sortedUsers, level);
+}
+
+function displayRating(users, level) {
+    rating_table.innerHTML = "";
+    let index = 0;
+    users.forEach(user => {
+        const row = document.createElement('div');
+        row.className = 'rating-row';
+        row.innerHTML = `
+            <span>${index + 1}</span>
+            <span>${user.login}</span>
+            <span>${user.levelScores[level]}</span>
+        `;
+        index++;
+        rating_table.appendChild(row);
+    }); 
+}

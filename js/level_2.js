@@ -6,6 +6,8 @@ const close_btn = document.querySelector('.close-btn');
 const help_btn = document.querySelector('.question-btn');
 const final_score = document.querySelector('.final-score');
 const complexity = document.querySelectorAll('.complexity-btn');
+const username = document.querySelector('.username');
+
 const target = Math.round(Math.random()*1000) + 400;
 const task = document.querySelector('.condition');
 const car = document.querySelector('.car');
@@ -22,6 +24,10 @@ let score_koef = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
     show_modal('complexity');
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+        username.textContent = currentUser;
+    };
 });
 
 

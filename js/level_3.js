@@ -8,6 +8,7 @@ const close_btn = document.querySelector('.close-btn');
 const final_score = document.querySelector('.final-score');
 const final_time = document.querySelector('.final-time');
 const complexity = document.querySelectorAll('.complexity-btn');
+const username = document.querySelector('.username');
 
 let time = 0;
 let current_time;
@@ -22,6 +23,10 @@ let interval;
 
 document.addEventListener('DOMContentLoaded', () => {
     show_modal('complexity');
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+        username.textContent = currentUser;
+    };
 });
 
 complexity.forEach(button => {
@@ -84,8 +89,10 @@ car.addEventListener('dragstart', (e) => {
     car.dataset.dragOffsetY = offsetY;
 })
 
-car.addEventListener('dragend', (e) => {
+car.addEventListener('dragend', e => {
     clearInterval(crashCheckInterval);
+    car.classList.remove('active');
+    car.style.cursor = 'grab';
 });
 
 document.addEventListener("dragover", e => {
@@ -93,11 +100,6 @@ document.addEventListener("dragover", e => {
     const rect = road.getBoundingClientRect();
     const x = e.clientX - car.dataset.dragOffsetX;
     const y = e.clientY - car.dataset.dragOffsetY;
-
-    //!!!!!!!!!!!!!!!!!
-    // ДЛЯ УжАСА:
-    // car.style.bottom = new_y + "px";
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     const isTopOut = (y - rect.top + 14) < 0;
     const isBottomOut = (y - rect.bottom + car.offsetHeight - 6) > 0;
@@ -126,9 +128,9 @@ document.addEventListener("dragover", e => {
         road.classList.remove('active');
     }
 
-    if (x >= finish.getBoundingClientRect().left && !isTopOut && !isBottomOut) {
+    if (x >= finish.getBoundingClientRect().left - 10 && !isTopOut && !isBottomOut) {
         clearInterval(interval);
-        score = Math.round(score_koef * 100 * (1/((time - current_time)/1000)));
+        score = Math.round(score_koef * 100 * (1/((time - current_time)/1000)+0.001));
         show_modal('win');
         final_score.textContent = score;
         const min = Math.floor((time - current_time) / 60000);
@@ -143,6 +145,27 @@ document.addEventListener("dragover", e => {
             updateScore(login, records);
         }
     }
+});
+
+road.addEventListener("drop", e => {
+    e.preventDefault();
+    if (!e.dataTransfer.getData('type') || e.dataTransfer.getData('type') != 'car') return;
+
+    const rect = road.getBoundingClientRect();
+    const x = e.clientX - car.dataset.dragOffsetX;
+    const y = e.clientY - car.dataset.dragOffsetY;
+    
+    car.style.left = (x - rect.left) + "px";
+    car.style.top = (y - rect.top) + "px";
+
+    console.log(x + ' ' + y);
+    console.log(car.dataset.dragOffsetX);
+    const carRect = car.getBoundingClientRect();
+    console.log('car top:', carRect.top, 'car left:', carRect.left);
+
+    console.log(car.style.left + ' ' + car.style.top);
+
+
 });
 
 pause_btn.addEventListener('click', () => {

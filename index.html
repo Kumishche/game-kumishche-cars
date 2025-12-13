@@ -9,6 +9,7 @@
 </head>
 <body>
     <header>
+        <p class="username"></p>
         <button class="logout-btn">
             <img src="images/logout_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
         </button>
@@ -32,15 +33,14 @@
                     <img src="images/X.svg">
                 </button>
                 <div class="levels-grid">
-                    <a class="level-btn" href="pages/level_1.html">
+                    <a class="level-btn" href="pages/level_1.html" data-level="1">
                         1
                     </a>
-                    <a class="level-btn" href="pages/level_2.html">
+                    <a class="level-btn" href="pages/level_2.html" data-level="2">
                         2
                     </a>
-                    <a class="level-btn" href="pages/level_3.html">
+                    <a class="level-btn" href="pages/level_3.html" data-level="3">
                         3
-                        <!-- <img src="images/Lock.svg"> -->
                     </a>
                 </div>
             </div>
@@ -49,20 +49,35 @@
         <div class="modal rating">
             <div class="container">
                 <p>Рейтинг</p>
-                <div class="rating-table">
-                </div>
                 <button class="close-btn">
                     <img src="images/X.svg">
                 </button>
+                <div class="levels-grid">
+                    <button class="rating-btn" data-level="1">
+                        1
+                    </button>
+                    <button class="rating-btn" data-level="2">
+                        2
+                    </button>
+                    <button class="rating-btn" data-level="3">
+                        3
+                    </button>
+                </div>
+                <div class="rating-table">
+                </div>
             </div>
         </div>
 
-        <div class="modal login active">
+        <div class="modal login">
             <div class="container">
                 <p>Авторизация</p>
-                <input type="text" class="login-input">
-                <button class="signin-btn"></button>
-                <button class="signup-btn">Регистрация</button>
+                <input type="text" class="login-input" placeholder="Введите логин">
+                <div class="sign">
+                    <button class="signin-btn">
+                        <img src="images/login_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
+                    </button>
+                    <button class="signup-btn">Регистрация</button>
+                </div>
             </div>
         </div>
 

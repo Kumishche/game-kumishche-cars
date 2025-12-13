@@ -63,7 +63,7 @@
     opacity: 1;
     position: absolute;
     left: 10px;
-    bottom: 5px;
+    top: 65%;
     cursor: grab;
     width: 70px;
     height: 70px;

@@ -2,9 +2,6 @@
     width: 150px;
     height: 150px;
 }
-.play-btn:hover {
-    scale: 1.02;
-}
 
 .login-btn {
     margin-right: 20px;
@@ -40,10 +37,36 @@
 
 .login .container {
     display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
+}
+
+.login p {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+input {
+    margin: auto; /* Центрирует по вертикали */
+    width: 80%;
+
+    border-radius: 10px;
+    min-height: 2rem;
+    min-width: 220px;
+    font-size: 1.2rem;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.sign {
+    margin-top: auto;
+    display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
+    justify-items: center;
+    gap: 10px;
+    width: 100%;
 }
 
 .signup-btn {
@@ -52,4 +75,44 @@
     font-size: 1rem;
     color: white;
     width: 150px;
+    text-decoration: underline;
 }
+
+.rating .container {
+    min-width: 400px;
+    min-height: 600px;
+    justify-items: center;
+}
+
+
+.rating-table {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    gap: 0;
+    width: 80%;
+}
+
+.rating-row {
+    display: contents;
+}
+
+.rating-row span {
+    padding: 10px;
+    border-bottom: 1px solid #ffffff;
+}
+
+.rating-row span:first-child {
+    text-align: center;
+    font-weight: bold;
+}
+
+.rating-row span:nth-child(2) {
+    text-align: left;
+}
+
+.rating-row span:last-child {
+    text-align: center;
+    font-weight: bold;
+}
+
