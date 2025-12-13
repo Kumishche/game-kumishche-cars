@@ -1,4 +1,4 @@
-import {show_modal, hide_modal} from "./functions.js";
+import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
 
 const speedOutput = document.querySelector('.speed');
 const pause_btn = document.querySelector('.pause-btn');
@@ -61,7 +61,7 @@ complexity.forEach(button => {
             current_time += 100;
         }, 100);
     })
-})
+});
 
 
 const check_btn = document.querySelector('.check-btn');
@@ -69,7 +69,7 @@ check_btn.addEventListener('click', () => {
     const speed = Number(speedOutput.textContent);
     const eps = Math.abs(speed*time - distance);
     clearInterval(interval);
-    if (eps <= 100) {
+    if (eps <= 300) {
         if (eps == 0) {
             score = score_koef * Math.round(100/(current_time/1000) + + 100/Math.pow(0.1, 2));
         }
@@ -82,11 +82,21 @@ check_btn.addEventListener('click', () => {
         const sec = Math.floor(current_time % 60000 / 1000);
         const ms = Math.floor(current_time % 1000);
         final_time.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
+    
+        const login = localStorage.getItem('currentUser')
+        const records = getScores(login);
+        console.log(login);
+        console.log(records);
+        console.log(score);
+        if (records[0] < score) {
+            records[0] = score;
+            updateScore(login, records);
+        };
     } 
     else {
         show_modal('lose');
-    }
-})
+    };
+});
 
 const arrow = document.querySelector('.arrow');
 const minAngle = -120; 

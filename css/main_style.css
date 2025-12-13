@@ -23,15 +23,33 @@
 }
 
 .levels,
-.rating {
+.rating,
+.login {
     display: none;
 }
 
 .levels.active,
-.rating.active {
+.rating.active,
+.login.active {
     display: flex;
 }
 
 .title {
     font-size: 2rem;
+}
+
+.login .container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.signup-btn {
+    background-color: transparent;
+    border-radius: 0;
+    font-size: 1rem;
+    color: white;
+    width: 150px;
 }

@@ -1,4 +1,4 @@
-import {show_modal, hide_modal} from "./functions.js";
+import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
 
 
 const pause_btn = document.querySelector('.pause-btn');
@@ -135,6 +135,13 @@ document.addEventListener("dragover", e => {
         const sec = Math.floor((time - current_time) % 60000 / 1000);
         const ms = Math.floor((time - current_time) % 1000);
         final_time.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
+    
+        const login = localStorage.getItem('currentUser')
+        const records = getScores(login);
+        if (records[2] < score) {
+            records[2] = score;
+            updateScore(login, records);
+        }
     }
 });
 

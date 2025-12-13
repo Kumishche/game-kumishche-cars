@@ -1,4 +1,4 @@
-import {show_modal, hide_modal} from "./functions.js";
+import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
 
 const pause_btn = document.querySelector('.pause-btn');
 const continue_btn = document.querySelector('.continue-btn');
@@ -67,6 +67,12 @@ check_btn.addEventListener('click', () => {
     if (Math.abs(current_distance-target) <= 80) {
         final_score.textContent = score;
         show_modal('win');
+        const login = localStorage.getItem('currentUser')
+        const records = getScores(login);
+        if (records[1] < score) {
+            records[1] = score;
+            updateScore(login, records);
+        };
     } 
     else {
         show_modal('lose');
