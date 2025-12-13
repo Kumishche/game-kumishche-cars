@@ -13,12 +13,14 @@
     --text-color: #000000;
 }
 
-body {
+html, body {
     text-align: center;
     font-family: "Comfortaa", sans-serif;
     cursor: url("../images/circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg"), auto;
     min-height: auto;
     overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
 }
  
 header {

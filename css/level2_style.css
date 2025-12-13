@@ -8,6 +8,7 @@
 .car {
     min-width: 200px;
     min-height: 200px;
+    /* position: absolute; */
 }
 
 .distance {
@@ -25,4 +26,13 @@
     flex-flow: column wrap;
     align-items: center;
     padding: 10px;
+}
+
+@keyframes moveRight {
+  from {
+    transform: translateX(calc(-50vw - 100px));
+  }
+  to {
+    transform: translateX(calc(50vw + 100px));
+  } 
 }

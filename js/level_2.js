@@ -8,6 +8,7 @@ const final_score = document.querySelector('.final-score');
 const complexity = document.querySelectorAll('.complexity-btn');
 const target = Math.round(Math.random()*1000) + 400;
 const task = document.querySelector('.condition');
+const car = document.querySelector('.car');
 task.textContent = "Останови таймер, когда автомобиль проедет " + target + "км";
 
 const distance_text = document.querySelector('.distance')
@@ -22,6 +23,9 @@ let score_koef = 1;
 document.addEventListener('DOMContentLoaded', () => {
     show_modal('complexity');
 });
+
+
+let car_anim;
 
 complexity.forEach(button => {
     button.addEventListener('click', () => {
@@ -48,6 +52,8 @@ complexity.forEach(button => {
             current_distance += speed;
             distance_text.textContent = Math.floor(current_distance);
         }, 50);
+
+        car.style.animation = "moveRight 6s forwards infinite";
     });
 });
 
@@ -55,8 +61,9 @@ complexity.forEach(button => {
 
 const check_btn = document.querySelector('.check-btn');
 check_btn.addEventListener('click', () => {
-    clearInterval(interval)
-    score = score_koef * Math.round(1/(Math.pow(Math.abs((current_distance-target)/1000), 2)+0.001));
+    clearInterval(interval);
+    car.style.animationPlayState = 'paused';
+    score = Math.round(score_koef * (1/(Math.pow(Math.abs((current_distance-target)/1000), 2)+0.001)));
     if (Math.abs(current_distance-target) <= 80) {
         final_score.textContent = score;
         show_modal('win');
@@ -70,6 +77,7 @@ check_btn.addEventListener('click', () => {
 pause_btn.addEventListener('click', () => {
     show_modal('pause');
     clearInterval(interval);
+    car.style.animationPlayState = 'paused';
 });
 
 continue_btn.addEventListener('click', () => {
@@ -78,31 +86,15 @@ continue_btn.addEventListener('click', () => {
         current_distance += speed*0.1;
         distance_text.textContent = Math.floor(current_distance);
     }, 50);
+    car.style.animationPlayState = 'running';
 });
 
 help_btn.addEventListener('click', () => {
     show_modal('help');
     clearInterval(interval);
+    car.style.animationPlayState = 'paused';
 });
 
-
-pause_btn.addEventListener('click', () => {
-    show_modal('pause');
-    clearInterval(interval);
-});
-
-continue_btn.addEventListener('click', () => {
-    hide_modal('pause');
-    interval = setInterval(() => {
-        current_distance += speed*0.1;
-        distance_text.textContent = Math.floor(current_distance);
-    }, 50);
-});
-
-help_btn.addEventListener('click', () => {
-    show_modal('help');
-    clearInterval(interval);
-});
 
 close_btn.addEventListener('click', () => {
     hide_modal('help');
@@ -110,5 +102,6 @@ close_btn.addEventListener('click', () => {
         current_distance += speed*0.1;
         distance_text.textContent = Math.floor(current_distance);
     }, 50);
+    car.style.animationPlayState = 'running';
 });
 
