@@ -16,26 +16,26 @@
 
 .speedometer {
     position: relative;
-    height: 240px;
-    width: 270px;
+    height: 300px;
+    width: 300px;
     background-color: var(--second-color);
     border-radius: 100%;
 }
 
 .arrow {
     position: absolute;
-    width: 12px;
-    height: 110px;
-    background-color: var(--accent-color);
-    bottom: 30%;
-    left: calc(50% - 6px);
+    width: 0;
+    height: 0;
+    bottom: 50%;
+    left: calc(50% - 10px);
     transform-origin: center bottom;
     transform: rotate(-45deg);
     cursor: grab;
-    transition: transform 0.1s;
     z-index: 10;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+
+    border-left: 15px solid transparent;  
+    border-right: 15px solid transparent;  
+    border-bottom: 130px solid var(--accent-color);  
 }
 
 .arrow:active {
@@ -45,9 +45,9 @@
 .center {
     position: absolute;
     left: calc(50% - 20px);
-    bottom: 20%;
-    width: 40px;
-    height: 40px;
+    bottom: 40%;
+    width: 50px;
+    height: 50px;
     border-radius: 100%;
     background-color: var(--accent-color);
 }

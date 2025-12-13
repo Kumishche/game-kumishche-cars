@@ -5,6 +5,7 @@ const pause_btn = document.querySelector('.pause-btn');
 const continue_btn = document.querySelector('.continue-btn');
 const close_btn = document.querySelector('.close-btn');
 const help_btn = document.querySelector('.question-btn');
+const speedometer = document.querySelector('.speedometer');
 
 const task_1 = document.querySelector('.condition1');
 const task_2 = document.querySelector('.condition2');
@@ -88,8 +89,8 @@ check_btn.addEventListener('click', () => {
 })
 
 const arrow = document.querySelector('.arrow');
-const minAngle = -90; 
-const maxAngle = 90;  
+const minAngle = -120; 
+const maxAngle = 120;  
 
 arrow.setAttribute('draggable', 'true');
 arrow.addEventListener('dragstart', (e) => {
@@ -98,7 +99,11 @@ arrow.addEventListener('dragstart', (e) => {
     e.dataTransfer.setDragImage(img, 0, 0);
 });
 
-document.addEventListener('dragover', (e) => {
+arrow.addEventListener('dragend', (e) => {
+    arrow.style.cursor = 'grab';
+});
+
+speedometer.addEventListener('dragover', (e) => {
     const rect = arrow.parentElement.getBoundingClientRect();
     const pivotX = rect.left + rect.width / 2;
     const pivotY = rect.bottom - (rect.height * 0.3);
@@ -106,13 +111,13 @@ document.addEventListener('dragover', (e) => {
     const deltaX = e.clientX - pivotX;
     const deltaY = pivotY - e.clientY; 
     
-    let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
+    let angle = Math.atan2(deltaX, deltaY) * (240 / Math.PI);
     if (angle < minAngle) angle = minAngle;
     if (angle > maxAngle) angle = maxAngle;
     
     arrow.style.transform = `rotate(${angle}deg)`;
 
-    const speed = Math.round(((angle - minAngle) / 180).toFixed(3) * 500);
+    const speed = Math.round(((angle - minAngle) / 240).toFixed(3) * 500);
     speedOutput.textContent = Math.min(500, Math.max(0, speed));
 });
 
