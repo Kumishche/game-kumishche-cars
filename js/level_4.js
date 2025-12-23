@@ -1,190 +1,272 @@
+
 import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
 
-
+const help_btn = document.querySelector('.question-btn');
 const pause_btn = document.querySelector('.pause-btn');
 const continue_btn = document.querySelector('.continue-btn');
-const help_btn = document.querySelector('.question-btn');
-const final_score = document.querySelector('.final-score');
-const final_time = document.querySelector('.final-time');
-const complexity = document.querySelectorAll('.complexity-btn');
+const canvas = document.querySelector('.roadCanvas');
+const car = document.querySelector('.car');
+const distanceEl = document.querySelector('.road-wrapper .distance');
 const username = document.querySelector('.username');
 
-let time = 0;
-let current_time;
-let num_obstacles = 5;
-const time_text = document.querySelector('.time');
-let score = 0;
-let score_koef = 1;
-time_text.textContent = current_time;
-
-let crashed = false;
 let interval;
 
+let points = []; 
+let cumLengths = [];
+let totalLength = 0;
+let fullMeters = 2000;
+let targetMeters = 2000;
+
+let dragging = false;
+let dragOffset = {x:0,y:0};
+const time = 20000;
+let timerMs = time;
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
-    show_modal('complexity');
-    const currentUser = localStorage.getItem("currentUser");
-    if (currentUser) {
-        username.textContent = currentUser;
-    };
-});
-
-complexity.forEach(button => {
-    button.addEventListener('click', () => {
-        hide_modal('complexity');
-
-        switch (button.classList[1])
-        {
-            case 'easy':
-                time = 5;
-                num_obstacles = 4;
-                score_koef = 1;
-                break;
-            case 'medium':
-                time = 8;
-                num_obstacles = 5;
-                score_koef = 1.15;
-                break;
-            case 'hard':
-                time = 6;
-                num_obstacles = 6;
-                score_koef = 2;
-                break;
-        }
-    
-        create_obstacles(num_obstacles);
-        time *= 1000;
-        current_time = time;
-        interval = setInterval(() => {
-            current_time -= 150;
-            const min = Math.floor(current_time / 60000);
-            const sec = Math.floor(current_time % 60000 / 1000);
-            const ms = Math.floor(current_time % 1000);
-            time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
-            if (current_time <= 0) {
-                clearInterval(interval);
-                time_text.textContent = "о нет..";
-                show_modal('lose');
-            }
-        }, 150);
-    });
-});
-
-let crashCheckInterval;
-
-const car = document.querySelector('.car');
-const road = document.querySelector('.road');
-const finish = document.querySelector('.finish');
-
-const rect = road.getBoundingClientRect();
-
-car.addEventListener('dragstart', (e) => {
-    car.classList.add('active');
-    e.dataTransfer.setData('type', 'car');
-    const carRect = car.getBoundingClientRect();
-    const offsetX = e.clientX - carRect.left;
-    const offsetY = e.clientY - carRect.top;
-    
-    car.dataset.dragOffsetX = offsetX;
-    car.dataset.dragOffsetY = offsetY;
-})
-
-car.addEventListener('dragend', e => {
-    clearInterval(crashCheckInterval);
-    car.classList.remove('active');
-    car.style.cursor = 'grab';
-});
-
-document.addEventListener("dragover", e => {
-    e.preventDefault();
-    const rect = road.getBoundingClientRect();
-    const x = e.clientX - car.dataset.dragOffsetX;
-    const y = e.clientY - car.dataset.dragOffsetY;
-
-    const isTopOut = (y - rect.top + 14) < 0;
-    const isBottomOut = (y - rect.bottom + car.offsetHeight - 6) > 0;
-    const isLeftOut = (x - rect.left + 6) < 0;
-    const isRightOut = (x - rect.right + car.offsetWidth - 8) > 0;
-    const isOut = isTopOut || isBottomOut || isLeftOut || isRightOut;
-
-    const obstacle_cars = document.querySelectorAll('.obstacle-car');
-    obstacle_cars.forEach(obstacle_car => {
-        const obstacleRect = obstacle_car.getBoundingClientRect(); 
-        if (x + car.offsetWidth < obstacleRect.left + 16 ||
-            x > obstacleRect.right - 16 ||
-            y > obstacleRect.bottom - 24 ||
-            y + car.offsetHeight < obstacleRect.top + 22
-        ) return;
-        crashed = true;
-    });
-
-    if (isOut || crashed) {
-        current_time = 0;
-        road.classList.add('active');
-        return;
-    }
-    else
-    {
-        road.classList.remove('active');
-    }
-
-    if (x >= finish.getBoundingClientRect().left - 10 && !isTopOut && !isBottomOut) {
-        clearInterval(interval);
-        score = Math.round(score_koef * 100 * (1/((time - current_time)/1000)+0.001));
-        show_modal('win');
-        final_score.textContent = score;
-        const min = Math.floor((time - current_time) / 60000);
-        const sec = Math.floor((time - current_time) % 60000 / 1000);
-        const ms = Math.floor((time - current_time) % 1000);
-        final_time.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
-    
-        const login = localStorage.getItem('currentUser')
-        const records = getScores(login);
-        if (records[2] < score) {
-            records[2] = score;
-            updateScore(login, records);
-        }
+    resizeCanvas();
+    drawRoad();
+    if (username) {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) username.textContent = currentUser;
     }
 });
 
-road.addEventListener("drop", e => {
-    e.preventDefault();
-    if (!e.dataTransfer.getData('type') || e.dataTransfer.getData('type') != 'car') return;
+function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+}
 
-    const rect = road.getBoundingClientRect();
-    const x = e.clientX - car.dataset.dragOffsetX;
-    const y = e.clientY - car.dataset.dragOffsetY;
-    
-    car.style.left = (x - rect.left) + "px";
-    car.style.top = (y - rect.top) + "px";
+function cubicPoint(t, p0, p1, p2, p3) {
+    const u = 1 - t;
+    const tt = t * t;
+    const uu = u * u;
+    const uuu = uu * u;
+    const ttt = tt * t;
+    const x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
+    const y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
+    return {x, y};
+}
 
-    console.log(x + ' ' + y);
-    console.log(car.dataset.dragOffsetX);
-    const carRect = car.getBoundingClientRect();
-    console.log('car top:', carRect.top, 'car left:', carRect.left);
+function sampleBezier(p0,p1,p2,p3, samples=1200) {
+    const arr = [];
+    for (let i=0;i<=samples;i++) arr.push(cubicPoint(i/samples,p0,p1,p2,p3));
+    return arr;
+}
 
-    console.log(car.style.left + ' ' + car.style.top);
+function drawRoad() {
+    const ctx = canvas.getContext('2d');
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    ctx.clearRect(0,0,w,h);
 
+    const margin = 80;
+    const p0 = {x: margin, y: h * 0.75};
+    const p3 = {x: w - margin, y: h * 0.25};
+    const p1 = {x: w * 0.33, y: h * (0.2 + Math.random() * 0.6)};
+    const p2 = {x: w * 0.66, y: h * (0.2 + Math.random() * 0.6)};
 
-});
+    const segments = 3 + Math.floor(Math.random()*3); 
+    points = [];
+    const samplesPerSegment = 1000;
+    let last = p0;
+    for (let s = 0; s < segments; s++) {
+        const startX = margin + (s) * ((w - 2*margin) / segments);
+        const endX = margin + (s+1) * ((w - 2*margin) / segments);
+        const p0s = s === 0 ? p0 : {x: startX, y: last.y};
+        const p3s = {x: endX, y: h * (0.2 + Math.random() * 0.6)};
+        const p1s = {x: startX + (endX - startX) * 0.25, y: h * (0.1 + Math.random() * 0.8)};
+        const p2s = {x: startX + (endX - startX) * 0.75, y: h * (0.1 + Math.random() * 0.8)};
+        const segPoints = sampleBezier(p0s,p1s,p2s,p3s,samplesPerSegment);
+        if (s > 0) segPoints.shift();
+        points = points.concat(segPoints);
+        last = p3s;
+    }
 
-pause_btn.addEventListener('click', () => {
-    show_modal('pause');
-    clearInterval(interval);
-});
+    cumLengths = [0];
+    totalLength = 0;
+    for (let i=1;i<points.length;i++) {
+        const dx = points[i].x - points[i-1].x;
+        const dy = points[i].y - points[i-1].y;
+        totalLength += Math.hypot(dx,dy);
+        cumLengths.push(totalLength);
+    }
 
-continue_btn.addEventListener('click', () => {
-    hide_modal('pause');
+    fullMeters = Math.max(200, Math.round(totalLength / 5)); 
+    targetMeters = 200 + Math.floor(Math.random() * (Math.max(1, fullMeters - 200) + 1));
+    const cond = document.querySelector('.condition');
+    if (cond) cond.textContent = `Пройдите ${targetMeters} м по дороге`;
+
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    ctx.strokeStyle = '#acacacff';
+    ctx.lineWidth = 18;
+    ctx.beginPath();
+    for (let i=0; i<points.length; i++) {
+        if (i === 0) ctx.moveTo(points[i].x, points[i].y);
+        else ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.stroke();
+
+    placeCarAtPoint(points[0]);
+}
+
+function placeCarAtPoint(pt) {
+    const wrapper = canvas.parentElement;
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    const offsetLeft = canvasRect.left - wrapperRect.left;
+    const offsetTop = canvasRect.top - wrapperRect.top;
+    car.style.left = (offsetLeft + pt.x) + 'px';
+    car.style.top = (offsetTop + pt.y) + 'px';
+    car.dataset.progress = 0;
+    updateDistance(0);
+}
+
+function updateDistance(meters) {
+    distanceEl.textContent = `${Math.max(0, Math.round(meters))} м`;
+}
+
+function findNearestIndex(x,y) {
+    let best = 0;
+    let bestDist = Infinity;
+    for (let i = 0; i < points.length; i += 6) { 
+        const dx = points[i].x - x;
+        const dy = points[i].y - y;
+        const d = dx*dx + dy*dy;
+        if (d < bestDist) { bestDist = d; best = i; }
+    }
+
+    const start = Math.max(0, best - 12);
+    const end = Math.min(points.length-1, best + 12);
+    for (let i=start;i<=end;i++) {
+        const dx = points[i].x - x;
+        const dy = points[i].y - y;
+        const d = dx*dx + dy*dy;
+        if (d < bestDist) { bestDist = d; best = i; }
+    }
+    return best;
+}
+
+function isOnRoadAt(x,y) {
+    const ctx = canvas.getContext('2d');
+
+    const rect = canvas.getBoundingClientRect();
+    const cx = Math.round((x - rect.left));
+    const cy = Math.round((y - rect.top));
+    if (cx < 0 || cy < 0 || cx >= rect.width || cy >= rect.height) return false;
+    const dpr = window.devicePixelRatio || 1;
+    try {
+        const data = ctx.getImageData(Math.round(cx * dpr), Math.round(cy * dpr), 1, 1).data;
+        return data[3] > 10;
+    } catch (e) {
+        return false;
+    }
+}
+
+function lengthToMeters(len) {
+    return (len / totalLength) * fullMeters;
+}
+
+function updateTimerDisplay(ms) {
+    const s = Math.max(0, ms/1000);
+    const tEl = document.querySelector('.road-wrapper .timer');
+    if (tEl) tEl.textContent = `${s.toFixed(1)} с`;
+}
+
+function startTimerOnce() {
+    if (interval) return;
+    updateTimerDisplay(timerMs);
     interval = setInterval(() => {
-        current_time -= 150;
-        const min = Math.floor(current_time / 60000);
-        const sec = Math.floor(current_time % 60000 / 1000);
-        const ms = Math.floor(current_time % 1000);
-        time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
-        if (current_time <= 0) {
+        timerMs -= 100;
+        if (timerMs <= 0) {
             clearInterval(interval);
+            interval = null;
+            updateTimerDisplay(0);
             show_modal('lose');
+        } else {
+            updateTimerDisplay(timerMs);
         }
-    }, 150);
+    }, 100);
+}
+
+car.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    dragging = true;
+    car.setPointerCapture(e.pointerId);
+    const crect = car.getBoundingClientRect();
+    dragOffset.x = e.clientX - crect.left;
+    dragOffset.y = e.clientY - crect.top;
+    startTimerOnce();
+});
+
+window.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const rect = canvas.getBoundingClientRect();
+    let x = e.clientX - rect.left - dragOffset.x + car.offsetWidth/2;
+    let y = e.clientY - rect.top - dragOffset.y + car.offsetHeight/2;
+
+    x = Math.max(0, Math.min(rect.width, x));
+    y = Math.max(0, Math.min(rect.height, y));
+
+    const wrapper = canvas.parentElement;
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    const offsetLeft = canvasRect.left - wrapperRect.left;
+    const offsetTop = canvasRect.top - wrapperRect.top;
+
+    car.style.left = (offsetLeft + x) + 'px';
+    car.style.top = (offsetTop + y) + 'px';
+
+    const globalX = rect.left + x;
+    const globalY = rect.top + y;
+    const onRoad = isOnRoadAt(globalX, globalY);
+
+    if (onRoad) {
+        car.classList.remove('offroad');
+        const idx = findNearestIndex(x,y);
+        const len = cumLengths[idx];
+        const meters = lengthToMeters(len);
+        car.dataset.progress = meters;
+        updateDistance(meters);
+        if (meters >= targetMeters) {
+            show_modal('win');
+        }
+    } else {
+        car.classList.add('offroad');
+        timerMs = time;
+        clearInterval(interval);
+        interval = setInterval(() => {
+            timerMs -= 100;
+            if (timerMs <= 0) {
+                clearInterval(interval);
+                interval = null;
+                updateTimerDisplay(0);
+                show_modal('lose');
+            } else {
+                updateTimerDisplay(timerMs);
+            }
+        }, 100);
+        if (points && points.length) {
+            placeCarAtPoint(points[0]);
+        }
+        car.dataset.progress = 0;
+        updateDistance(0);
+        setTimeout(() => car.classList.remove('offroad'), 200);
+        dragging = false;
+    }
+});
+
+window.addEventListener('pointerup', (e) => {
+    if (!dragging) return;
+    dragging = false;
+    try { car.releasePointerCapture(e.pointerId); } catch(e){}
 });
 
 help_btn.addEventListener('mouseenter', () => {
@@ -195,80 +277,34 @@ help_btn.addEventListener('mouseenter', () => {
 help_btn.addEventListener('mouseleave', () => {
     hide_modal('help');
     interval = setInterval(() => {
-        current_time -= 150;
-        const min = Math.floor(current_time / 60000);
-        const sec = Math.floor(current_time % 60000 / 1000);
-        const ms = Math.floor(current_time % 1000);
-        time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
-        if (current_time <= 0) {
+        timerMs -= 100;
+        if (timerMs <= 0) {
             clearInterval(interval);
+            interval = null;
+            updateTimerDisplay(0);
             show_modal('lose');
+        } else {
+            updateTimerDisplay(timerMs);
         }
-    }, 150);
+    }, 100);
 });
 
-function create_obstacles(num_obstacles) {
-    const obstacles = [];
-    const patterns = [
-        [true, false, false],
-        [false, true, false],
-        [false, false, true],
-        [true, true, false],
-        [false, true, true],
-        [true, false, true]
-    ]
+pause_btn.addEventListener('click', () => {
+    show_modal('pause');
+    clearInterval(interval);
+});
 
-    for (let i = 0; i < num_obstacles; i++) {
-        let pattern;
-        let attempts = 0;
-        let k = 1;
-
-        do {
-            pattern = patterns[Math.floor(Math.random() * patterns.length)];
-            attempts++;
-            
-            if (i === 0) break;
-            
-            const prevRow = obstacles[i - 1];
-
-            let sameAsPrev = true;
-            for (let j = 0; j < pattern.length; j++) {
-                if (prevRow[i] !== pattern[i]) sameAsPrev = false;
-            }
-            
-            if (sameAsPrev) {
-                k += 1;
-            }
-
-            if (k < 3) {
-                break;
-            }    
-        } while (attempts < 100);
-        
-        obstacles.push([...pattern]);
-    }
-
-
-    for (let i = 0; i < obstacles.length; i++) {
-        const obstacle = document.createElement('div');
-        obstacle.className = "obstacle";
-        obstacle.style.position = 'absolute';
-        for (let j = 0; j < obstacles[i].length; j++) {
-            if (obstacles[i][j]) {
-                const new_obstacle = document.createElement("img");
-                new_obstacle.src = '../images/car_object.svg';
-                new_obstacle.className = 'obstacle-car';
-                new_obstacle.style.position = 'absolute';
-                new_obstacle.style.width = '70px';
-                new_obstacle.style.height = '70px';
-                new_obstacle.style.top = j*(rect.height/3) + 'px';
-                obstacle.appendChild(new_obstacle);
-            }
+continue_btn.addEventListener('click', () => {
+    hide_modal('pause');
+    interval = setInterval(() => {
+        timerMs -= 100;
+        if (timerMs <= 0) {
+            clearInterval(interval);
+            interval = null;
+            updateTimerDisplay(0);
+            show_modal('lose');
+        } else {
+            updateTimerDisplay(timerMs);
         }
-
-        obstacle.style.width = '70px';
-        obstacle.style.height = '100%';
-        obstacle.style.left = 100 + i*(((rect.width-120)/obstacles.length)) + 'px' ;   
-        road.appendChild(obstacle);
-    };
-};
+    }, 100);
+});

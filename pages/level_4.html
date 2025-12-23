@@ -6,13 +6,13 @@
     <title>Уровень 2</title>
     <link rel="stylesheet" href="../css/style.css"/>
     <link rel="stylesheet" href="../css/game_style.css"/>
-    <link rel="stylesheet" href="../css/level2_style.css"/>
+    <link rel="stylesheet" href="../css/level4_style.css"/>
 </head>
 <body>
     <header>
         <p class="username"></p>
         <div class="header-menu">
-            <a class="restart-btn" href="../pages/level_2.html">
+            <a class="restart-btn" href="../pages/level_4.html">
                 <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
             </a>
             <a class="home-btn" href="../index.html">
@@ -29,9 +29,11 @@
             <div class="task">
                 <p class="condition">Останови таймер, когда автомобиль проедет 2000м</p>
             </div>
-            <div class="field">
-                <img class='car' src="../images/local_shipping_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24 1.svg">
-                <div class="distance"></div> 
+            <div class="road-wrapper">
+                <div class="timer"></div>
+                <canvas class="roadCanvas"></canvas>
+                <img class="car" src="../images/directions_car.svg">
+                <div class="distance"></div>
             </div>
             <button class="check-btn">
                 <img src="../images/check.svg">
@@ -63,15 +65,12 @@
                 </div>
                 
                 <div class="results-actions">
-                    <a class="restart-btn" href="../pages/level_2.html">
+                    <a class="restart-btn" href="../pages/level_4.html">
                         <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </a>
                     <a class="home-btn" href="../index.html">
                         <img src="../images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </a> 
-                    <a href="level_3.html">
-                        <img src="../images/Arrow right.svg">
-                    </a>
                 </div>
             </div>
         </div>
@@ -80,7 +79,7 @@
             <div class="container">
                 <p id="result-title">Катастрофическая ошибка!</p>          
                 <div class="results-actions">
-                    <a class="restart-btn" href="../pages/level_2.html">
+                    <a class="restart-btn" href="../pages/level_4.html">
                         <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </a>
                     <a class="home-btn" href="../index.html">
