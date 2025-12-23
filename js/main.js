@@ -2,6 +2,7 @@ import * as func from "./functions.js";
 
 const play_btn = document.querySelector(".play-btn");
 const question_btn = document.querySelector('.question-btn');
+const help_modal = document.querySelector('.help');
 const chart_btn = document.querySelector('.chart-btn');
 const close_btns = document.querySelectorAll('.close-btn');
 const signin_btn = document.querySelector('.signin-btn');
@@ -13,37 +14,48 @@ const username = document.querySelector('.username');
 const level_btns = document.querySelectorAll('.level-btn');
 
 let scores;
+let currentUser;
 
 document.addEventListener('DOMContentLoaded', () => {
     func.hide_all_modals();
+    
+    if (!func.findUserByLogin('admin')) {
+        func.addNewUser('admin', level_btns.length);
+        scores = new Array(level_btns.length).fill(value);
+    }
 
-    const currentUser = localStorage.getItem("currentUser");
+    currentUser = localStorage.getItem("currentUser");
     if (currentUser) {
         username.textContent = currentUser;
         scores = func.getScores(currentUser);
         console.log(scores);
+        if (currentUser != 'admin') {
+            level_btns.forEach(button => {
+                const level = button.dataset.level;
+                if (level > 1 && scores[level-2] == 0) {
+                    const img = new Image();
+                    img.src = "./images/Lock.svg";
+                    button.innerHTML = "";
+                    button.appendChild(img);   
+                    button.addEventListener('click', preventClick);
+                }
+            });
+        }
     } else {
         func.show_modal('login');
     };
-
-    level_btns.forEach(button => {
-        const level = button.dataset.level;
-        if (level > 1 && scores[level-2] == 0) {
-            const img = new Image();
-            img.src = "./images/Lock.svg";
-            button.innerHTML = "";
-            button.appendChild(img);   
-            button.addEventListener('click', (e) => e.preventDefault());
-        }
-    })
 });
 
 play_btn.addEventListener("click", () => {
     func.show_modal('levels');
 });
 
-question_btn.addEventListener('click', () => {
+question_btn.addEventListener('mouseenter', () => {
     func.show_modal('help');
+});
+
+question_btn.addEventListener('mouseleave', () => {
+    func.hide_modal('help');
 });
 
 chart_btn.addEventListener('click', () => {
@@ -55,6 +67,7 @@ chart_btn.addEventListener('click', () => {
 close_btns.forEach(button => {
     button.addEventListener('click', () => {
         func.hide_modal(button.closest('.modal').classList[1]);
+        rating_btns.forEach(btn => btn.classList.remove('active'));
     });
 });
 
@@ -80,6 +93,7 @@ function signin() {
     
     if (existingUser) {
         localStorage.setItem("currentUser", login);
+        currentUser = login;
         func.hide_modal('login');
         scores = func.getScores(login);
         console.log(scores);
@@ -88,17 +102,27 @@ function signin() {
         alert(`Пользователь с таким логином отсутствует`);
     };
 
-    level_btns.forEach(button => {
-        const level = button.dataset.level;
-        if (level > 1 && scores[level-2] == 0) {
-            const img = new Image();
-            img.src = "./images/Lock.svg";
-            button.innerHTML = "";
-            button.appendChild(img);   
-            button.addEventListener('click', (e) => e.preventDefault());
-        }
-    });
+    if (login != 'admin') {
+        level_btns.forEach(button => {
+            const level = button.dataset.level;
+            if (level > 1 && scores[level-2] == 0) {
+                const img = new Image();
+                img.src = "./images/Lock.svg";
+                button.innerHTML = "";
+                button.appendChild(img);   
+                button.addEventListener('click', preventClick);
+            }
+        });
+    } else {
+        level_btns.forEach(button => {
+            const level = button.dataset.level;
+            button.innerHTML = level;
+            button.removeEventListener('click', preventClick);
+        });
+    }
 };
+
+const preventClick = (e) => e.preventDefault();
 
 signup_btn.addEventListener('click', () => {
     const input_login = document.querySelector('.login-input');
@@ -112,11 +136,12 @@ signup_btn.addEventListener('click', () => {
     
     const existingUser = func.findUserByLogin(login);
     if (!existingUser) {
-        if (func.addNewUser(login)) {  
+        if (func.addNewUser(login, level_btns.length)) {  
+            let value = 0;
             localStorage.setItem("currentUser", login);
-            alert(`Новый пользователь ${login} зарегистрирован!`);
-            scores = [0, 0, 0];
-            console.log(scores);
+            currentUser = login;
+            alert(`Новый пользователь ${login} зарегистрирован!`)
+            scores = new Array(level_btns.length).fill(value);
             func.hide_modal('login');
             username.textContent = login;
         } else {
@@ -152,7 +177,7 @@ logout_btn.addEventListener('click', () => {
 rating_btns.forEach(button => {
     button.addEventListener('click', () => {
         rating_click(button.dataset.level);
-        rating_btns.forEach(button => button.classList.remove('active'));
+        rating_btns.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
     });
 });
@@ -173,14 +198,16 @@ function displayRating(users, level) {
     rating_table.innerHTML = "";
     let index = 0;
     users.forEach(user => {
-        const row = document.createElement('div');
-        row.className = 'rating-row';
-        row.innerHTML = `
-            <span>${index + 1}</span>
-            <span>${user.login}</span>
-            <span>${user.levelScores[level]}</span>
-        `;
-        index++;
-        rating_table.appendChild(row);
+        if (user.login != 'admin' || currentUser == 'admin') {
+            const row = document.createElement('div');
+            row.className = 'rating-row';
+            row.innerHTML = `
+                <span>${index + 1}</span>
+                <span>${user.login}</span>
+                <span>${user.levelScores[level]}</span>
+            `;
+            index++;
+            rating_table.appendChild(row);
+        }
     }); 
 }

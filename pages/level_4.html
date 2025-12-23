@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Уровень 1</title>
+    <title>Уровень 2</title>
     <link rel="stylesheet" href="../css/style.css"/>
     <link rel="stylesheet" href="../css/game_style.css"/>
-    <link rel="stylesheet" href="../css/level1_style.css"/>
+    <link rel="stylesheet" href="../css/level2_style.css"/>
 </head>
 <body>
     <header>
         <p class="username"></p>
         <div class="header-menu">
-            <a class="restart-btn" href="../pages/level_1.html">
+            <a class="restart-btn" href="../pages/level_2.html">
                 <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
             </a>
             <a class="home-btn" href="../index.html">
@@ -27,18 +27,11 @@
     <main>
         <div class="game">
             <div class="task">
-                <div class="conditions">
-                    <p class="condition1"></p>
-                    <p class="condition2"></p>
-                </div>
-                <div class="question">
-                    <p>С какой скоростью двигался автомобиль?</p>
-                    <div class="speed"></div>
-                    <div class="speedometer">
-                        <div class="center"></div>
-                        <div class="arrow"></div>
-                    </div> 
-                </div>
+                <p class="condition">Останови таймер, когда автомобиль проедет 2000м</p>
+            </div>
+            <div class="field">
+                <img class='car' src="../images/local_shipping_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24 1.svg">
+                <div class="distance"></div> 
             </div>
             <button class="check-btn">
                 <img src="../images/check.svg">
@@ -61,23 +54,22 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="modal win">
             <div class="container">
                 <p id="result-title">Уровень пройден!</p>
                 <div class="results-stats">
                     <p>Очки: <span class="final-score">0</span></p>
-                    <p>Время: <span class="final-time">0s</span></p>
                 </div>
                 
                 <div class="results-actions">
-                    <a class="restart-btn" href="../pages/level_1.html">
+                    <a class="restart-btn" href="../pages/level_2.html">
                         <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </a>
                     <a class="home-btn" href="../index.html">
                         <img src="../images/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </a> 
-                    <a href="level_2.html">
+                    <a href="level_3.html">
                         <img src="../images/Arrow right.svg">
                     </a>
                 </div>
@@ -86,9 +78,9 @@
 
         <div class="modal lose">
             <div class="container">
-                <p id="result-title">Катастрофическая ошибка!</p>        
+                <p id="result-title">Катастрофическая ошибка!</p>          
                 <div class="results-actions">
-                    <a class="restart-btn" href="../pages/level_1.html">
+                    <a class="restart-btn" href="../pages/level_2.html">
                         <img src="../images/replay_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg">
                     </a>
                     <a class="home-btn" href="../index.html">
@@ -119,6 +111,6 @@
         </button>
     </footer>
     <script type="module" src="../js/game_menu.js"></script>
-    <script type="module" src="../js/level_1.js"></script>
+    <script type="module" src="../js/level_4.js"></script>
 </body>
 </html>

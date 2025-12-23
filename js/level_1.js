@@ -3,7 +3,6 @@ import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
 const speedOutput = document.querySelector('.speed');
 const pause_btn = document.querySelector('.pause-btn');
 const continue_btn = document.querySelector('.continue-btn');
-const close_btn = document.querySelector('.close-btn');
 const help_btn = document.querySelector('.question-btn');
 const speedometer = document.querySelector('.speedometer');
 
@@ -146,12 +145,12 @@ continue_btn.addEventListener('click', () => {
     }, 100);
 });
 
-help_btn.addEventListener('click', () => {
+help_btn.addEventListener('mouseenter', () => {
     show_modal('help');
     clearInterval(interval);
 });
 
-close_btn.addEventListener('click', () => {
+help_btn.addEventListener('mouseleave', () => {
     hide_modal('help');
     interval = setInterval(() => {
         current_time += 100;

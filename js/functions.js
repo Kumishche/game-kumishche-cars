@@ -51,7 +51,7 @@ export function findUserByLogin(login) {
     return users.find(user => user.login === login);
 };
 
-export function addNewUser(login) {
+export function addNewUser(login, num_levels) {
     const users = getAllUsers();
     if (users.some(user => user.login === login)) {
         return false;
@@ -59,7 +59,7 @@ export function addNewUser(login) {
     const newUser = {
         login: login,
         createdAt: new Date().toISOString(),
-        levelScores: [0, 0, 0],
+        levelScores: new Array(num_levels).fill(0)
     };
     
     users.push(newUser);

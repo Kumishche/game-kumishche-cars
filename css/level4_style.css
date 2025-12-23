@@ -6,8 +6,9 @@
 }
 
 .car {
-    width: 100px;
-    height: 100px;
+    min-width: 200px;
+    min-height: 200px;
+    /* position: absolute; */
 }
 
 .distance {
@@ -27,23 +28,11 @@
     padding: 10px;
 }
 
-.orbit {
-  position: static;
-  width: 40vmin;
-  height: 40vmin;
-
-  animation: rotate 8s linear infinite;
-}
-
-@keyframes rotate {
+@keyframes moveRight {
   from {
-    transform: rotate(0deg);
+    transform: translateX(calc(-50vw - 100px));
   }
   to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (max-height:600px){
-  .car {width: 60px; height: 60px;}
+    transform: translateX(calc(50vw + 100px));
+  } 
 }

@@ -12,7 +12,6 @@ const username = document.querySelector('.username');
 let time = 0;
 let current_time;
 let num_obstacles = 5;
-let animated = false;
 const time_text = document.querySelector('.time');
 let score = 0;
 let score_koef = 1;
@@ -49,7 +48,6 @@ complexity.forEach(button => {
                 time = 6;
                 num_obstacles = 6;
                 score_koef = 2;
-                animated = true;
                 break;
         }
     
@@ -255,9 +253,6 @@ function create_obstacles(num_obstacles) {
         const obstacle = document.createElement('div');
         obstacle.className = "obstacle";
         obstacle.style.position = 'absolute';
-        if (animated) {
-            obstacle.style.animation = 'moveRight 8s linear infinite';
-        }
         for (let j = 0; j < obstacles[i].length; j++) {
             if (obstacles[i][j]) {
                 const new_obstacle = document.createElement("img");
