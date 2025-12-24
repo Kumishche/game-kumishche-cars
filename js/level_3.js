@@ -21,6 +21,8 @@ time_text.textContent = current_time;
 let crashed = false;
 let interval;
 
+let started = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     show_modal('complexity');
     const currentUser = localStorage.getItem("currentUser");
@@ -43,12 +45,12 @@ complexity.forEach(button => {
             case 'medium':
                 time = 8;
                 num_obstacles = 5;
-                score_koef = 1.15;
+                score_koef = 1.2;
                 break;
             case 'hard':
                 time = 6;
                 num_obstacles = 6;
-                score_koef = 2;
+                score_koef = 2.2;
                 animated = true;
                 break;
         }
@@ -56,6 +58,7 @@ complexity.forEach(button => {
         create_obstacles(num_obstacles);
         time *= 1000;
         current_time = time;
+        started = true;
         interval = setInterval(() => {
             current_time -= 150;
             const min = Math.floor(current_time / 60000);
@@ -66,6 +69,8 @@ complexity.forEach(button => {
                 clearInterval(interval);
                 time_text.textContent = "о нет..";
                 show_modal('lose');
+                const obstacles = document.querySelectorAll('.obstacle');
+                obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'paused');
             }
         }, 150);
     });
@@ -129,10 +134,18 @@ document.addEventListener("dragover", e => {
         road.classList.remove('active');
     }
 
-    if (x >= finish.getBoundingClientRect().left - 10 && !isTopOut && !isBottomOut) {
+    if (x >= finish.getBoundingClientRect().left - 10 && !isTopOut && !isBottomOut && current_time > 0 && !crashed) {
         clearInterval(interval);
-        score = Math.round(score_koef * 100 * (1/((time - current_time)/1000)+0.001));
+
+        const timeSpent = Math.max(0.001, time - current_time);
+        const timeLeft = Math.max(0, current_time);
+        score = Math.round(score_koef * 5 * Math.pow(time / timeSpent, 0.8) * Math.sqrt(timeLeft + 1));
+        score = Math.max(0, score);
+       
         show_modal('win');
+
+        const obstacles = document.querySelectorAll('.obstacle');
+        obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'paused');
         final_score.textContent = score;
         const min = Math.floor((time - current_time) / 60000);
         const sec = Math.floor((time - current_time) % 60000 / 1000);
@@ -145,6 +158,8 @@ document.addEventListener("dragover", e => {
             records[2] = score;
             updateScore(login, records);
         }
+
+        return;
     }
 });
 
@@ -165,17 +180,18 @@ road.addEventListener("drop", e => {
     console.log('car top:', carRect.top, 'car left:', carRect.left);
 
     console.log(car.style.left + ' ' + car.style.top);
-
-
 });
 
 pause_btn.addEventListener('click', () => {
     show_modal('pause');
     clearInterval(interval);
+    const obstacles = document.querySelectorAll('.obstacle');
+    obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'paused');
 });
 
 continue_btn.addEventListener('click', () => {
     hide_modal('pause');
+    if (!started) return;
     interval = setInterval(() => {
         current_time -= 150;
         const min = Math.floor(current_time / 60000);
@@ -184,18 +200,26 @@ continue_btn.addEventListener('click', () => {
         time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
         if (current_time <= 0) {
             clearInterval(interval);
+            time_text.textContent = "о нет..";
             show_modal('lose');
+            const obstacles = document.querySelector('.obstacle');
+            obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'paused');
         }
     }, 150);
+    const obstacles = document.querySelectorAll('.obstacle');
+    obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'running');
 });
 
 help_btn.addEventListener('mouseenter', () => {
     show_modal('help');
     clearInterval(interval);
+    const obstacles = document.querySelectorAll('.obstacle');
+    obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'paused');
 });
 
 help_btn.addEventListener('mouseleave', () => {
     hide_modal('help');
+    if (!started) return;
     interval = setInterval(() => {
         current_time -= 150;
         const min = Math.floor(current_time / 60000);
@@ -204,9 +228,14 @@ help_btn.addEventListener('mouseleave', () => {
         time_text.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}:${(ms/10).toString().padStart(2, '0')}`;
         if (current_time <= 0) {
             clearInterval(interval);
+            time_text.textContent = "о нет..";
             show_modal('lose');
+            const obstacles = document.querySelectorAll('.obstacle');
+            obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'paused');
         }
     }, 150);
+    const obstacles = document.querySelectorAll('.obstacle');
+    obstacles.forEach(obstacle => obstacle.style.animationPlayState = 'running');
 });
 
 function create_obstacles(num_obstacles) {

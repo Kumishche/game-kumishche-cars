@@ -23,6 +23,7 @@ let score_koef;
 
 let distance;
 let time;
+let started = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     show_modal('complexity');
@@ -63,6 +64,7 @@ complexity.forEach(button => {
         task_1.textContent = "Автомобиль проехал " + distance + "км";
         task_2.textContent = "Время в дороге составило " + time + "ч";
 
+        started = true;
         interval = setInterval(() => {
             current_time += 100;
         }, 100);
@@ -76,7 +78,14 @@ check_btn.addEventListener('click', () => {
     const eps = Math.abs(speed*time - distance);
     clearInterval(interval);
     if (eps <= 300) {
-        score = Math.round(score_koef * Math.round(100/((current_time/1000)+0.001) + 100/(Math.pow(eps, 2)+0.001)));
+        const normalizedTime = current_time / 1000;
+        const normalizedEps = eps / 100;
+        const baseScore = 800;
+        const timePenalty = 1 + normalizedTime * 0.5;
+        const accuracyPenalty = 1 + normalizedEps * 0.2;
+        score = Math.round(score_koef * baseScore / (timePenalty * accuracyPenalty));
+        score = Math.max(0, score);
+
         show_modal('win');
         final_score.textContent = score;
         const min = Math.floor(current_time / 60000);
@@ -100,8 +109,8 @@ check_btn.addEventListener('click', () => {
 });
 
 const arrow = document.querySelector('.arrow');
-const minAngle = -140; 
-const maxAngle = 140;  
+const minAngle = -160; 
+const maxAngle = 160;  
 
 arrow.setAttribute('draggable', 'true');
 arrow.addEventListener('dragstart', (e) => {
@@ -129,7 +138,7 @@ speedometer.addEventListener('dragover', (e) => {
     
     arrow.style.transform = `rotate(${angle}deg)`;
 
-    const speed = Math.round(((angle - minAngle) / range).toFixed(3) * 500);
+    const speed = Math.round(((angle - minAngle) / range).toFixed(5) * 500);
     speedOutput.textContent = Math.min(500, Math.max(0, speed));
 });
 
@@ -140,6 +149,7 @@ pause_btn.addEventListener('click', () => {
 
 continue_btn.addEventListener('click', () => {
     hide_modal('pause');
+    if (!started) return;
     interval = setInterval(() => {
         current_time += 100;
     }, 100);
@@ -152,6 +162,7 @@ help_btn.addEventListener('mouseenter', () => {
 
 help_btn.addEventListener('mouseleave', () => {
     hide_modal('help');
+    if (!started) return;
     interval = setInterval(() => {
         current_time += 100;
     }, 100);

@@ -20,6 +20,7 @@ let score = 0;
 let interval;
 let speed_koef = 1;
 let score_koef = 1;
+let started = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     show_modal('complexity');
@@ -51,6 +52,7 @@ complexity.forEach(button => {
         }
 
         speed *= speed_koef;
+        started = true;
         interval = setInterval(() => {
             current_distance += speed;
             distance_text.textContent = Math.floor(current_distance);
@@ -87,6 +89,7 @@ pause_btn.addEventListener('click', () => {
 
 continue_btn.addEventListener('click', () => {
     hide_modal('pause');
+    if (!started) return;
     interval = setInterval(() => {
         current_distance += speed*0.1;
         distance_text.textContent = Math.floor(current_distance);
@@ -102,6 +105,7 @@ help_btn.addEventListener('mouseenter', () => {
 
 help_btn.addEventListener('mouseleave', () => {
     hide_modal('help');
+    if (!started) return;
     interval = setInterval(() => {
         current_distance += speed*0.1;
         distance_text.textContent = Math.floor(current_distance);
