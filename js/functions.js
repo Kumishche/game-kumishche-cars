@@ -20,22 +20,50 @@ export function hide_all_modals() {
 
 
 export function getAllUsers() {
-    const usersJSON = localStorage.getItem("users");
-    return usersJSON ? JSON.parse(usersJSON) : [];
+    try {
+        const usersJSON = localStorage.getItem("users");
+        if (!usersJSON) {
+            return [];
+        }
+        
+        const users = JSON.parse(usersJSON);
+        if (!Array.isArray(users)) {
+            console.warn("Данные пользователей повреждены. Очищаем...");
+            localStorage.removeItem("users");
+            return [];
+        }
+        
+        return users;
+    } catch (error) {
+        console.error("Ошибка при чтении пользователей из localStorage: ", error);
+        console.warn("Очищаем некорректные данные...");
+        localStorage.removeItem("users");
+        return [];
+    }
 };
 
 export function saveAllUsers(users) {
-    localStorage.setItem("users", JSON.stringify(users));
+    try {
+        localStorage.setItem("users", JSON.stringify(users));
+    } catch (error) {
+        console.error("Ошибка при сохранении пользователей в localStorage: ", error);
+    }
 };
 
 export function getScores(login) {
-    const users = getAllUsers();
-    const user = users.find(user => user.login === login);
-    
-    if (user && user.levelScores) {
-        return user.levelScores;
+    try {
+        const users = getAllUsers();
+        const user = users.find(user => user.login === login);
+        
+        if (user && Array.isArray(user.levelScores)) {
+            return user.levelScores;
+        }
+        console.warn(`Некорректные данные уровней для пользователя ${login}`);
+        return new Array(4).fill(0);
+    } catch (error) {
+        console.error("Ошибка при получении очков: ", error);
+        return new Array(4).fill(0);
     }
-    return [0, 0, 0];
 };
 
 export function updateScore(login, scores) {

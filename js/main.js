@@ -1,4 +1,5 @@
 import * as func from "./functions.js";
+import { initializeStorage } from "./storage_validator.js";
 
 const play_btn = document.querySelector(".play-btn");
 const question_btn = document.querySelector('.question-btn');
@@ -17,11 +18,12 @@ let scores;
 let currentUser;
 
 document.addEventListener('DOMContentLoaded', () => {
+    initializeStorage();
     func.hide_all_modals();
     
     if (!func.findUserByLogin('admin')) {
         func.addNewUser('admin', level_btns.length);
-        scores = new Array(level_btns.length).fill(value);
+        scores = new Array(level_btns.length).fill(0);
     }
 
     currentUser = localStorage.getItem("currentUser");

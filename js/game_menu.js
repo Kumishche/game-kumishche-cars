@@ -1,4 +1,5 @@
 import {show_modal, hide_modal, hide_all_modals} from "./functions.js";
+import { initializeStorage } from "./storage_validator.js";
 
 
 const pause_btn = document.querySelector('.pause-btn');
@@ -7,6 +8,7 @@ const question_btn = document.querySelector('.question-btn');
 const close_btns = document.querySelectorAll('.close-btn');
 
 document.addEventListener('DOMContentLoaded', () => {
+    initializeStorage();
     hide_all_modals();
 });
 
