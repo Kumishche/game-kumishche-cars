@@ -1,8 +1,3 @@
-import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
-
-
-const pause_btn = document.querySelector('.pause-btn');
-const continue_btn = document.querySelector('.continue-btn');
 const help_btn = document.querySelector('.question-btn');
 const final_score = document.querySelector('.final-score');
 const final_time = document.querySelector('.final-time');

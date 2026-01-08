@@ -1,25 +1,25 @@
-export function show_modal(className) {
+function show_modal(className) {
     const modal = document.querySelector('.' + className);
     if (modal) {
         modal.classList.add('active');
     }
 }
 
-export function hide_modal(className) {
+function hide_modal(className) {
     const modal = document.querySelector('.' + className);
     if (modal) {
         modal.classList.remove('active');
     }
 }
 
-export function hide_all_modals() {
+function hide_all_modals() {
     document.querySelectorAll('.modal').forEach(modal => {
         modal.classList.remove('active');
     });
 }
 
 
-export function getAllUsers() {
+function getAllUsers() {
     try {
         const usersJSON = localStorage.getItem("users");
         if (!usersJSON) {
@@ -42,7 +42,7 @@ export function getAllUsers() {
     }
 };
 
-export function saveAllUsers(users) {
+function saveAllUsers(users) {
     try {
         localStorage.setItem("users", JSON.stringify(users));
     } catch (error) {
@@ -50,7 +50,7 @@ export function saveAllUsers(users) {
     }
 };
 
-export function getScores(login) {
+function getScores(login) {
     try {
         const users = getAllUsers();
         const user = users.find(user => user.login === login);
@@ -66,7 +66,7 @@ export function getScores(login) {
     }
 };
 
-export function updateScore(login, scores) {
+function updateScore(login, scores) {
     const users = getAllUsers();
     const userIndex = users.findIndex(user => user.login === login);
 
@@ -74,12 +74,12 @@ export function updateScore(login, scores) {
     saveAllUsers(users);
 }
 
-export function findUserByLogin(login) {
+function findUserByLogin(login) {
     const users = getAllUsers();
     return users.find(user => user.login === login);
 };
 
-export function addNewUser(login, num_levels) {
+function addNewUser(login, num_levels) {
     const users = getAllUsers();
     if (users.some(user => user.login === login)) {
         return false;

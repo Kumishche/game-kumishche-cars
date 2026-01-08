@@ -1,7 +1,3 @@
-import {show_modal, hide_modal, hide_all_modals} from "./functions.js";
-import { initializeStorage } from "./storage_validator.js";
-
-
 const pause_btn = document.querySelector('.pause-btn');
 const continue_btn = document.querySelector('.continue-btn');
 const question_btn = document.querySelector('.question-btn');

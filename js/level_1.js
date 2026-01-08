@@ -1,8 +1,4 @@
-import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
-
 const speedOutput = document.querySelector('.speed');
-const pause_btn = document.querySelector('.pause-btn');
-const continue_btn = document.querySelector('.continue-btn');
 const help_btn = document.querySelector('.question-btn');
 const speedometer = document.querySelector('.speedometer');
 

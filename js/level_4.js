@@ -1,9 +1,4 @@
-
-import {show_modal, hide_modal, getScores, updateScore} from "./functions.js";
-
 const help_btn = document.querySelector('.question-btn');
-const pause_btn = document.querySelector('.pause-btn');
-const continue_btn = document.querySelector('.continue-btn');
 const canvas = document.querySelector('.roadCanvas');
 const car = document.querySelector('.car');
 const distance = document.querySelector('.distance');

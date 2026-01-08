@@ -1,6 +1,3 @@
-import * as func from "./functions.js";
-import { initializeStorage } from "./storage_validator.js";
-
 const play_btn = document.querySelector(".play-btn");
 const question_btn = document.querySelector('.question-btn');
 const help_modal = document.querySelector('.help');
@@ -19,17 +16,17 @@ let currentUser;
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeStorage();
-    func.hide_all_modals();
+    hide_all_modals();
     
-    if (!func.findUserByLogin('admin')) {
-        func.addNewUser('admin', level_btns.length);
+    if (!findUserByLogin('admin')) {
+        addNewUser('admin', level_btns.length);
         scores = new Array(level_btns.length).fill(0);
     }
 
     currentUser = localStorage.getItem("currentUser");
     if (currentUser) {
         username.textContent = currentUser;
-        scores = func.getScores(currentUser);
+        scores = getScores(currentUser);
         console.log(scores);
         if (currentUser != 'admin') {
             level_btns.forEach(button => {
@@ -44,31 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     } else {
-        func.show_modal('login');
+        show_modal('login');
     };
 });
 
 play_btn.addEventListener("click", () => {
-    func.show_modal('levels');
+    show_modal('levels');
 });
 
 question_btn.addEventListener('mouseenter', () => {
-    func.show_modal('help');
+    show_modal('help');
 });
 
 question_btn.addEventListener('mouseleave', () => {
-    func.hide_modal('help');
+    hide_modal('help');
 });
 
 chart_btn.addEventListener('click', () => {
-    func.show_modal('rating');
+    show_modal('rating');
     rating_click(1);
     rating_btns[0].classList.add('active');
 });
 
 close_btns.forEach(button => {
     button.addEventListener('click', () => {
-        func.hide_modal(button.closest('.modal').classList[1]);
+        hide_modal(button.closest('.modal').classList[1]);
         rating_btns.forEach(btn => btn.classList.remove('active'));
     });
 });
@@ -91,13 +88,13 @@ function signin() {
         return;
     };
     
-    const existingUser = func.findUserByLogin(login);
+    const existingUser = findUserByLogin(login);
     
     if (existingUser) {
         localStorage.setItem("currentUser", login);
         currentUser = login;
-        func.hide_modal('login');
-        scores = func.getScores(login);
+        hide_modal('login');
+        scores = getScores(login);
         console.log(scores);
         username.textContent = login;
     } else {
@@ -136,15 +133,15 @@ signup_btn.addEventListener('click', () => {
         return;
     };
     
-    const existingUser = func.findUserByLogin(login);
+    const existingUser = findUserByLogin(login);
     if (!existingUser) {
-        if (func.addNewUser(login, level_btns.length)) {  
+        if (addNewUser(login, level_btns.length)) {  
             let value = 0;
             localStorage.setItem("currentUser", login);
             currentUser = login;
             alert(`Новый пользователь ${login} зарегистрирован!`)
             scores = new Array(level_btns.length).fill(value);
-            func.hide_modal('login');
+            hide_modal('login');
             username.textContent = login;
         } else {
             alert('Ошибка при регистрации');
@@ -171,7 +168,7 @@ logout_btn.addEventListener('click', () => {
         return;
     }
     localStorage.setItem('currentUser', "");
-    func.show_modal('login');
+    show_modal('login');
     username.textContent = "";
 });
 
@@ -185,7 +182,7 @@ rating_btns.forEach(button => {
 });
 
 function rating_click(level) {
-    const users = func.getAllUsers();
+    const users = getAllUsers();
     level--;
     const sortedUsers = users.sort((userA, userB) => {
         const scoreA = userA.levelScores[level];

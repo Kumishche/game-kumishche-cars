@@ -17,7 +17,7 @@ function isValidUsersList(users) {
     return Array.isArray(users) && users.every(isValidUser);
 }
 
-export function validateAndRepairStorage() {
+function validateAndRepairStorage() {
     try {
         const usersJSON = localStorage.getItem(STORAGE_KEYS.USERS);
         
@@ -75,7 +75,7 @@ function getAllUsersFromStorage() {
     }
 }
 
-export function initializeStorage() {
+function initializeStorage() {
     validateAndRepairStorage();
     console.log("Storage инициализирована и готова к работе");
 }
